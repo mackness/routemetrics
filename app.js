@@ -47,7 +47,8 @@ var app = express();
 /**
  * Connect to MongoDB.
  */
-mongoose.connect(process.env.MONGODB || process.env.MONGOLAB_URI);
+ //use process.env later
+mongoose.connect('mongodb://heroku_86ctf471:dpvohmdsfdnfj2meph27sibsh9@ds021761.mlab.com:21761/heroku_86ctf471');
 mongoose.connection.on('error', function() {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
   process.exit(1);
@@ -226,3 +227,5 @@ app.listen(app.get('port'), function() {
 });
 
 module.exports = app;
+
+
