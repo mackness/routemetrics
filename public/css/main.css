@@ -8841,4 +8841,15 @@ textarea {
   width: 100%;
   text-align: center; }
 
+.console-block {
+  padding: 0 10px;
+  position: absolute;
+  bottom: 45px;
+  left: 0;
+  right: 0; }
+
+.console {
+  width: 100%;
+  height: 120px; }
+
 /*# sourceMappingURL=main.css.map */
