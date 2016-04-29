@@ -18,7 +18,6 @@ npm run test
 ```
 
 ### Core Dependencies
-```
+
 [Express](http://expressjs.com/)
 [Google Maps API ](https://developers.google.com/maps/)
-```
