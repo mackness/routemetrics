@@ -1,8 +1,6 @@
 Routemetrics - performance monitoring for cyclists
 =====================
 
-A minimal and light dev environment for ReactJS.
-
 ### Usage
 
 ```
@@ -17,4 +15,10 @@ This boilerplate project includes React ESLint configuration.
 
 ```
 npm run test
+```
+
+### Core Dependencies
+```
+[Express](http://expressjs.com/)
+[Google Maps API ](https://developers.google.com/maps/)
 ```
