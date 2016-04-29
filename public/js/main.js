@@ -1,7 +1,4 @@
 
-var Route = Route || {};
-
-
 
 function initMap(center) {
   // Specify features and elements to define styles.
@@ -29,7 +26,7 @@ function initMap(center) {
 
   // Create a map object and specify the DOM element for display.
   var map = new google.maps.Map(document.getElementById('map'), {
-    center: {'lng:'35.27801, 'lat:'}},
+    center: center,
     scrollwheel: false,
     // Apply the map style array to the map.
     styles: styleArray,
@@ -136,15 +133,12 @@ function watchError(err) {
 	console.warn('ERROR(' + err.code + '): ' + err.message);
 }
 
-Route.init = ()=> {
-	if ($('#map').length) {
-		navigator.geolocation.getCurrentPosition(success, error, options);
-		navigator.geolocation.watchPosition(watchSuccess, watchError, options);
-	}
-}
+$(window).on('load', ()=> {
+  if ($('#map').length) {
+    navigator.geolocation.getCurrentPosition(success, error, options);
+    navigator.geolocation.watchPosition(watchSuccess, watchError, options);
+  }
+})
 
-$(document).ready(function() {
-	new
-});
 
 
