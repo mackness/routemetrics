@@ -1,5 +1,5 @@
 Routemetrics 
-> performance monitoring for cyclists
+performance monitoring for cyclists
 =====================
 
 A minimal and light dev environment for ReactJS.
