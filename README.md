@@ -9,9 +9,7 @@ npm install
 node app.js
 ```
 
-### Linting / Tests
-
-TODO
+### Linting / Tests (TODO)
 
 ```
 npm run test
