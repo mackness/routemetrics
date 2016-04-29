@@ -9,9 +9,9 @@ npm install
 node app.js
 ```
 
-### Linting
+### Linting / Tests
 
-This boilerplate project includes React ESLint configuration.
+TODO
 
 ```
 npm run test
@@ -25,4 +25,4 @@ npm run test
 
 [Google Geolocation API](https://developers.google.com/maps/documentation/geolocation/intro)
 
-[Google Roads API](https://developers.google.com/maps/documentation/roads/intro) 
+[Google Roads API](https://developers.google.com/maps/documentation/roads/intro)
