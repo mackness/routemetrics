@@ -1,5 +1,9 @@
 
-function initMap(center) {a
+var Route = Route || {};
+
+
+
+function initMap(center) {
   // Specify features and elements to define styles.
   var styleArray = [
     {
@@ -25,7 +29,7 @@ function initMap(center) {a
 
   // Create a map object and specify the DOM element for display.
   var map = new google.maps.Map(document.getElementById('map'), {
-    center: center,
+    center: {'lng:'35.27801, 'lat:'}},
     scrollwheel: false,
     // Apply the map style array to the map.
     styles: styleArray,
@@ -45,7 +49,6 @@ function initMap(center) {a
       title: 'Your Location',
       map: map
   });
-
 
 	$.get('https://roads.googleapis.com/v1/snapToRoads', {
 	  interpolate: true,
@@ -102,7 +105,6 @@ function success(pos) {
   console.log('Longitude: ' + crd.longitude);
   console.log('More or less ' + crd.accuracy + ' meters.');
 
-
   var currval = $('.console').val();
   $('.console').val(currval += '\n' + 'Your current position is:\n' + 'lat ' + crd.latitude + '\n' + 'lng: ' + crd.longitude + '\n' + 'acc: ' + crd.accuracy);
 	var textarea = document.querySelector('.console');
@@ -134,11 +136,15 @@ function watchError(err) {
 	console.warn('ERROR(' + err.code + '): ' + err.message);
 }
 
-$(document).ready(function() {
+Route.init = ()=> {
 	if ($('#map').length) {
 		navigator.geolocation.getCurrentPosition(success, error, options);
 		navigator.geolocation.watchPosition(watchSuccess, watchError, options);
 	}
+}
+
+$(document).ready(function() {
+	new
 });
 
 
