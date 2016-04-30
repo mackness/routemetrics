@@ -1,128 +1,155 @@
 
+$(document).ready(function() {
+	initLocationProcedure();
+	drawingManager();
+});
 
-<<<<<<< HEAD
-var MapManager = MapManager || {};
+var map;
+var drawingManager;
+var placeIdArray = [];
+var polylines = [];
+var snappedCoordinates = [];
+var API_KEY = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
 
-var MapManager = {
-
-	getCurrentLocation() {
+function initLocationProcedure() {
     map = new google.maps.Map(document.getElementById('map'), {
-          zoom : 17
+          zoom : 17,
+          styles: window.mapStyles
     });
 
+		var bikeLayer = new google.maps.BicyclingLayer();
+		bikeLayer.setMap(map);
+
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(this.monitorLocation, (err)=> {
-        	console.warn('There was an error finding your location', err);
-        }, {
+        navigator.geolocation.getCurrentPosition(displayAndWatch, locError, {
             enableHighAccuracy : true,
             timeout : 60000,
             maximumAge : 0
         });
     } else {
-        alert("Geolocation API not supported, sorry bud :/");
-=======
-function initMap(center) {
-  // Specify features and elements to define styles.
-  var styleArray = [
-    {
-      featureType: "road",
-      stylers: [
-       { saturation: -100 }
-      ]
-    },{
-      featureType: "road",
-      elementType: "geometry",
-      stylers: [
-        { hue: "#00ffee" },
-        { saturation: -100 }
-      ]
-    },{
-      featureType: "road",
-      elementType: "labels",
-      stylers: [
-        { visibility: "off" }
-      ]
+        alert("Your phone does not support the Geolocation API");
     }
-  ];
-
-  // Create a map object and specify the DOM element for display.
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: center,
-    scrollwheel: false,
-    // Apply the map style array to the map.
-    styles: styleArray,
-    zoom: 18,
-    mapTypeControl: true,
-    mapTypeControlOptions: {
-      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-      mapTypeIds: [
-        google.maps.MapTypeId.ROADMAP,
-        google.maps.MapTypeId.TERRAIN
-      ]
->>>>>>> 48a9867609145aeceed09312d972e5059862c708
-    }
-	},
-
-	monitorLocation(pos) {
-		console.log(pos)
-	},
-
-
-	init() {
-		this.getCurrentLocation();
-	}
-
-};
-
-<<<<<<< HEAD
-document.addEventListener('DOMContentLoaded', MapManager.init(), false);
-=======
-function success(pos) {
-  var crd = pos.coords;
-
-  console.log('Your current position is:');
-  console.log('Latitude : ' + crd.latitude);
-  console.log('Longitude: ' + crd.longitude);
-  console.log('More or less ' + crd.accuracy + ' meters.');
-
-  var currval = $('.console').val();
-  $('.console').val(currval += '\n' + 'Your current position is:\n' + 'lat ' + crd.latitude + '\n' + 'lng: ' + crd.longitude + '\n' + 'acc: ' + crd.accuracy);
-	var textarea = document.querySelector('.console');
-	textarea.scrollTop = textarea.scrollHeight;
-
-  initMap({lat: crd.latitude, lng: crd.longitude});
-};
-
-function error(err) {
-  console.warn('ERROR(' + err.code + '): ' + err.message);
-};
-
-function watchSuccess(pos) {
-  var crd = pos.coords;
-
-  console.log('Your updated position is:');
-  console.log('Latitude : ' + crd.latitude);
-  console.log('Longitude: ' + crd.longitude);
-  console.log('More or less ' + crd.accuracy + ' meters.');
-
-  var currval = $('.console').val();
-  $('.console').val(currval += '\n' + 'Your updated position is:\n' + 'lat ' + crd.latitude + 'lng: ' + crd.longitude + '\n' + 'acc: ' + crd.accuracy);
-	var textarea = document.querySelector('.console');
-	textarea.scrollTop = textarea.scrollHeight;
-
 }
 
-function watchError(err) {
-	console.warn('ERROR(' + err.code + '): ' + err.message);
+function locError(error) {
+	// the current position could not be located
+	alert("The current position could not be found!");
 }
 
-$(window).on('load', ()=> {
-  if ($('#map').length) {
-    navigator.geolocation.getCurrentPosition(success, error, options);
-    navigator.geolocation.watchPosition(watchSuccess, watchError, options);
+function drawingManager() {
+  // Enables the polyline drawing control. Click on the map to start drawing a
+  // polyline. Each click will add a new vertice. Double-click to stop drawing.
+  drawingManager = new google.maps.drawing.DrawingManager({
+    drawingMode: google.maps.drawing.OverlayType.POLYLINE,
+    drawingControl: true,
+    drawingControlOptions: {
+      position: google.maps.ControlPosition.TOP_CENTER,
+      drawingModes: [
+        google.maps.drawing.OverlayType.POLYLINE
+      ]
+    },
+    polylineOptions: {
+      strokeColor: 'yellow',
+      strokeWeight: 2
+    }
+  });
+  drawingManager.setMap(map);
+
+   drawingManager.addListener('polylinecomplete', function(poly) {
+    var path = poly.getPath();
+    polylines.push(poly);
+    placeIdArray = [];
+    runSnapToRoad(path);
+  });
+}
+
+function drawPolyline(coords) {
+  var polyline = new google.maps.Polyline({
+    path: snappedCoordinates,
+    strokeColor: 'black',
+    strokeWeight: 3
+  });
+
+  polyline.setMap(map);
+  polylines.push(snappedPolyline);
+}
+	
+
+function runSnapToRoad(path) {
+  var pathValues = [];
+  for (var i = 0; i < path.getLength(); i++) {
+    pathValues.push(path.getAt(i).toUrlValue());
   }
-})
+
+  $.get('https://roads.googleapis.com/v1/snapToRoads', {
+    interpolate: true,
+    key: API_KEY,
+    path: pathValues.join('|')
+  }, function(data) {
+    processSnapToRoadResponse(data);
+    // drawPolyLine();
+  });
+}
+
+// Store snapped polyline returned by the snap-to-road method.
+function processSnapToRoadResponse(data) {
+  snappedCoordinates = [];
+  placeIdArray = [];
+  for (var i = 0; i < data.snappedPoints.length; i++) {
+    var latlng = new google.maps.LatLng(
+        data.snappedPoints[i].location.latitude,
+        data.snappedPoints[i].location.longitude);
+    snappedCoordinates.push(latlng);
+    placeIdArray.push(data.snappedPoints[i].placeId);
+  }
+}
 
 
+function displayAndWatch(position) {
+    // set current position
+    setUserLocation(position);
+    // watch position
+    watchCurrentPosition();
+}
 
->>>>>>> 48a9867609145aeceed09312d972e5059862c708
+function setUserLocation(pos) {
+    // marker for userLocation
+    userLocation = new google.maps.Marker({
+           map : map,
+           position : new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
+           title : "You are here",
+	});
+    // pan to updated location
+    map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+
+		//debugging
+		var currval = $('.console').val();
+		$('.console').val(currval += '\n' + 'Your updated position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed );
+		var textarea = document.querySelector('.console');
+		textarea.scrollTop = textarea.scrollHeight;
+		//debugging
+}
+
+function collectCoords(pos) {
+	var pos = pos.coords;
+	polylines.push({lng: pos.longitude, lat: pos.latitude});
+	console.log(polylines);
+}
+
+function watchCurrentPosition() {
+    var positionTimer = navigator.geolocation.watchPosition(function(pos) {
+        setMarkerPosition(userLocation, pos);
+        map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+        collectCoords(pos);
+    });
+}
+
+function setMarkerPosition(marker, pos) {
+    marker.setPosition(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+		//debugging
+		var currval = $('.console').val();
+		$('.console').val(currval += '\n' + 'Your updated position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed  );
+		var textarea = document.querySelector('.console');
+		textarea.scrollTop = textarea.scrollHeight;
+		//debugging
+}
