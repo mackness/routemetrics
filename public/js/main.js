@@ -111,6 +111,7 @@ function drawRoughPolyline() {
 }
 
 function processRoughCoordinates(data) {
+  debuggingConsole('\n' + data, + roughCoordinates.push(data) '\n');
   roughCoordinates.push(data);
   drawRoughPolyline();
 }
