@@ -147,6 +147,7 @@ function setUserLocation(pos) {
     map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
 
   map.addListener('center_changed', function(data) {
+    console.log(map.getCenter());
     processRoughCoordinates(map.getCenter());
   });
 
