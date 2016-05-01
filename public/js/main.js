@@ -87,7 +87,7 @@ function runSnapToRoad(path) {
     path: pathValues.join('|')
   }, function(data) {
     processSnapToRoadResponse(data);
-    // drawPolyLine();
+    drawPolyLine();
   });
 }
 
@@ -103,7 +103,6 @@ function processSnapToRoadResponse(data) {
     placeIdArray.push(data.snappedPoints[i].placeId);
   }
 }
-
 
 function displayAndWatch(position) {
     // set current position
@@ -140,7 +139,7 @@ function watchCurrentPosition() {
     var positionTimer = navigator.geolocation.watchPosition(function(pos) {
         setMarkerPosition(userLocation, pos);
         map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-        collectCoords(pos);
+        runSnapToRoad(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
     });
 }
 
@@ -153,3 +152,8 @@ function setMarkerPosition(marker, pos) {
 		textarea.scrollTop = textarea.scrollHeight;
 		//debugging
 }
+
+
+
+
+
