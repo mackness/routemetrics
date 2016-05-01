@@ -12,6 +12,13 @@ var snappedCoordinates = [];
 var roughCoordinates = [];
 var API_KEY = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
 
+function debuggingConsole(msg) {
+    var currval = $('.console').val();
+    $('.console').val(currval +=  msg );
+    var textarea = document.querySelector('.console');
+    textarea.scrollTop = textarea.scrollHeight;
+}
+
 function initLocationProcedure() {
     map = new google.maps.Map(document.getElementById('map'), {
           zoom : 17,
@@ -104,6 +111,7 @@ function drawRoughPolyline() {
 }
 
 function processRoughCoordinates(data) {
+  debugging(data);
   for (var i = 0; i < data.length; i++) {
     var latlgn = new google.maps.LatLng(data.lat, data.lng);
     roughCoordinates.push(latlng);
@@ -143,10 +151,7 @@ function setUserLocation(pos) {
     map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
 
 		//debugging
-		var currval = $('.console').val();
-		$('.console').val(currval += '\n' + 'Your updated position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed );
-		var textarea = document.querySelector('.console');
-		textarea.scrollTop = textarea.scrollHeight;
+    debuggingConsole('\n' + 'Your position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed)
 		//debugging
 }
 
@@ -161,10 +166,7 @@ function watchCurrentPosition() {
 function setMarkerPosition(marker, pos) {
     marker.setPosition(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
 		//debugging
-		var currval = $('.console').val();
-		$('.console').val(currval += '\n' + 'Your updated position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed  );
-		var textarea = document.querySelector('.console');
-		textarea.scrollTop = textarea.scrollHeight;
+    debuggingConsole('\n' + 'Your updated position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed)
 		//debugging
 }
 
