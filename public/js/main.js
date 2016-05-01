@@ -111,12 +111,8 @@ function drawRoughPolyline() {
 }
 
 function processRoughCoordinates(data) {
-  debugging(data);
-  for (var i = 0; i < data.length; i++) {
-    var latlgn = new google.maps.LatLng(data.lat, data.lng);
-    roughCoordinates.push(latlng);
-    drawRoughPolyline();
-  }
+  roughCoordinates.push(data);
+  drawRoughPolyline();
 }
 
 // Store snapped polyline returned by the snap-to-road method.
@@ -150,6 +146,10 @@ function setUserLocation(pos) {
     // pan to updated location
     map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
 
+  map.addListener('center_changed', function(data) {
+    processRoughCoordinates(map.getCenter());
+  });
+
 		//debugging
     debuggingConsole('\n' + 'Your position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed)
 		//debugging
@@ -159,7 +159,7 @@ function watchCurrentPosition() {
     var positionTimer = navigator.geolocation.watchPosition(function(pos) {
         setMarkerPosition(userLocation, pos);
         map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-        processRoughCoordinates({lat: pos.coords.latitude, lng: pos.coords.longitude});
+        processRoughCoordinates(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
     });
 }
 
