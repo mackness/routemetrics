@@ -11,6 +11,8 @@ var polylines = [];
 var snappedCoordinates = [];
 var API_KEY = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
 
+
+
 function initLocationProcedure() {
     map = new google.maps.Map(document.getElementById('map'), {
           zoom : 17,
@@ -62,20 +64,10 @@ function drawingManager() {
     runSnapToRoad(path);
   });
 }
-
-function drawPolyline(coords) {
-  var polyline = new google.maps.Polyline({
-    path: snappedCoordinates,
-    strokeColor: 'black',
-    strokeWeight: 3
-  });
-
-  polyline.setMap(map);
-  polylines.push(snappedPolyline);
-}
 	
-
 function runSnapToRoad(path) {
+  var self = this;
+  console.log('[path]', path);
   var pathValues = [];
   for (var i = 0; i < path.getLength(); i++) {
     pathValues.push(path.getAt(i).toUrlValue());
@@ -85,10 +77,21 @@ function runSnapToRoad(path) {
     interpolate: true,
     key: API_KEY,
     path: pathValues.join('|')
-  }, function(data) {
+  }, (data)=> {
     processSnapToRoadResponse(data);
-    drawPolyLine();
+    drawSnappedPolyline();
   });
+}
+
+function drawSnappedPolyline() {
+  var snappedPolyline = new google.maps.Polyline({
+    path: snappedCoordinates,
+    strokeColor: 'black',
+    strokeWeight: 3
+  });
+
+  snappedPolyline.setMap(map);
+  polylines.push(snappedPolyline);
 }
 
 // Store snapped polyline returned by the snap-to-road method.
@@ -139,7 +142,12 @@ function watchCurrentPosition() {
     var positionTimer = navigator.geolocation.watchPosition(function(pos) {
         setMarkerPosition(userLocation, pos);
         map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-        runSnapToRoad(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+        var roughPolyline = new google.maps.Polyline({
+          path: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
+          strokeColor: 'black',
+          strokeWeight: 3
+        });
+        roughPolyline.setMap(map);
     });
 }
 
