@@ -9,9 +9,8 @@ var drawingManager;
 var placeIdArray = [];
 var polylines = [];
 var snappedCoordinates = [];
+var roughCoordinates = [];
 var API_KEY = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
-
-
 
 function initLocationProcedure() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -94,6 +93,24 @@ function drawSnappedPolyline() {
   polylines.push(snappedPolyline);
 }
 
+function drawRoughPolyline() {
+  var snappedPolyline = new google.maps.Polyline({
+    path: roughCoordinates,
+    strokeColor: 'red',
+    strokeWeight: 3
+  });
+
+  snappedPolyline.setMap(map);
+}
+
+function processRoughCoordinates(data) {
+  for (var i = 0; i < data.length; i++) {
+    var latlgn = new google.maps.LatLng(data.lat, data.lng);
+    roughCoordinates.push(latlng);
+    drawRoughPolyline();
+  }
+}
+
 // Store snapped polyline returned by the snap-to-road method.
 function processSnapToRoadResponse(data) {
   snappedCoordinates = [];
@@ -120,6 +137,7 @@ function setUserLocation(pos) {
            map : map,
            position : new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
            title : "You are here",
+           // icon: 'http://localhost:3000/img/marker.svg'
 	});
     // pan to updated location
     map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
@@ -132,22 +150,11 @@ function setUserLocation(pos) {
 		//debugging
 }
 
-function collectCoords(pos) {
-	var pos = pos.coords;
-	polylines.push({lng: pos.longitude, lat: pos.latitude});
-	console.log(polylines);
-}
-
 function watchCurrentPosition() {
     var positionTimer = navigator.geolocation.watchPosition(function(pos) {
         setMarkerPosition(userLocation, pos);
         map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-        var roughPolyline = new google.maps.Polyline({
-          path: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
-          strokeColor: 'black',
-          strokeWeight: 3
-        });
-        roughPolyline.setMap(map);
+        processRoughCoordinates({lat: pos.coords.latitude, lng: pos.coords.longitude});
     });
 }
 
