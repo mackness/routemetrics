@@ -1,7 +1,9 @@
 
 $(document).ready(function() {
-	initLocationProcedure();
-	drawingManager();
+  if (document.querySelector('#map')) {
+	 initLocationProcedure();
+	 drawingManager();
+  }
 });
 
 var map;
@@ -12,12 +14,14 @@ var snappedCoordinates = [];
 var roughCoordinates = [];
 var API_KEY = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
 
-function debuggingConsole(msg) {
+///debugging
+function debugging(msg) {
     var currval = $('.console').val();
     $('.console').val(currval +=  msg );
     var textarea = document.querySelector('.console');
     textarea.scrollTop = textarea.scrollHeight;
 }
+///debugging
 
 function initLocationProcedure() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -111,7 +115,7 @@ function drawRoughPolyline() {
 }
 
 function processRoughCoordinates(data) {
-  debuggingConsole('\n' + data, + roughCoordinates.push(data) + '\n');
+  debugging('\n' + data, + roughCoordinates.push(data) + '\n');
   roughCoordinates.push(data);
   drawRoughPolyline();
 }
@@ -152,9 +156,7 @@ function setUserLocation(pos) {
     processRoughCoordinates(map.getCenter());
   });
 
-		//debugging
-    debuggingConsole('\n' + 'Your position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed)
-		//debugging
+  debugging('\n' + 'Your position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed);
 }
 
 function watchCurrentPosition() {
@@ -167,12 +169,17 @@ function watchCurrentPosition() {
 
 function setMarkerPosition(marker, pos) {
     marker.setPosition(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-		//debugging
-    debuggingConsole('\n' + 'Your updated position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed)
-		//debugging
+    debugging('\n' + 'Your updated position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed)
 }
 
 
+
+// document.addEventListener('click', (event)=> {
+//   event.preventDefault();
+//   event.stopPropagation();
+//   initLocationProcedure();
+//   DrawingManager();  
+// });
 
 
 

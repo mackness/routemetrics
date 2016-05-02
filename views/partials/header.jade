@@ -1,6 +1,10 @@
 .navbar.navbar-default.navbar-fixed-top
   .container
     .navbar-header
+      if user.profile.picture
+        a(href='/account').avatar
+          img(src='#{user.profile.picture}')
+      else
       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
         span.sr-only Toggle navigation
         span.icon-bar
@@ -10,13 +14,6 @@
         i.fa.fa-cube
         | routemetrics
     .collapse.navbar-collapse
-      ul.nav.navbar-nav
-        li(class=(title == 'Home') ? 'active' : undefined)
-          a(href='/') Home
-        li(class=(title == 'API Examples') ? 'active' : undefined)
-          a(href='/api') API Examples
-        li(class=(title == 'Contact') ? 'active' : undefined)
-          a(href='/contact') Contact
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=(title == 'Login') ? 'active' : undefined)
@@ -38,3 +35,6 @@
               li.divider
               li
                 a(href='/logout') Logout
+      ul.nav.navbar-nav.navbar-right
+        li(class=(title == 'Contact') ? 'active' : undefined)
+          a(href='/contact') Contact
