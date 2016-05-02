@@ -1,10 +1,11 @@
 .navbar.navbar-default.navbar-fixed-top
   .container
     .navbar-header
-      if user.profile.picture
-        a(href='/account').avatar
-          img(src='#{user.profile.picture}')
-      else
+      if user
+        if user.profile.picture
+          a(href='/account').avatar
+            img(src='#{user.profile.picture}')
+        else
       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
         span.sr-only Toggle navigation
         span.icon-bar
