@@ -1,8 +1,5 @@
-Routemetrics 
-> performance monitoring for cyclists
+Routemetrics - performance monitoring for cyclists
 =====================
-
-A minimal and light dev environment for ReactJS.
 
 ### Usage
 
@@ -12,10 +9,18 @@ npm install
 node app.js
 ```
 
-### Linting
-
-This boilerplate project includes React ESLint configuration.
+### Linting / Tests (TODO)
 
 ```
 npm run test
 ```
+
+### Core Dependencies
+
+[Express](http://expressjs.com/)
+
+[Google Maps API ](https://developers.google.com/maps/)
+
+[Google Geolocation API](https://developers.google.com/maps/documentation/geolocation/intro)
+
+[Google Roads API](https://developers.google.com/maps/documentation/roads/intro)
