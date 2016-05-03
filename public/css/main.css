@@ -8827,19 +8827,27 @@ textarea {
 .fa {
   margin-right: 6px; }
 
+.logo {
+  font-size: 20px;
+  width: 25px; }
+
 #map {
   position: absolute;
   top: 50px;
   left: 0;
   right: 0;
-  bottom: 45px;
+  bottom: 0;
   background-color: #f1f1f1;
   display: flex;
-  align-items: center; }
+  align-items: center;
+  transition: all 250ms linear; }
+  .tracking-active #map {
+    bottom: 305px; }
 
 .map__loading {
   width: 100%;
-  text-align: center; }
+  text-align: center;
+  font-weight: bold; }
 
 .console-block {
   padding: 0 10px;

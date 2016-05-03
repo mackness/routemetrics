@@ -2,7 +2,7 @@
 $(document).ready(function() {
   if (document.querySelector('#map')) {
 	 initLocationProcedure();
-	 drawingManager();
+	 //drawingManager();
   }
 });
 
@@ -12,6 +12,7 @@ var placeIdArray = [];
 var polylines = [];
 var snappedCoordinates = [];
 var roughCoordinates = [];
+var currentPos = {};
 var API_KEY = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
 
 ///debugging
@@ -24,13 +25,39 @@ function debugging(msg) {
 ///debugging
 
 function initLocationProcedure() {
+    //init map
     map = new google.maps.Map(document.getElementById('map'), {
-          zoom : 17,
-          styles: window.mapStyles
+      zoom : 17,
+     mapTypeControl: true,
+     streetViewControl: false,
+     zoomControl: false,
+      mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+        mapTypeIds: [
+          google.maps.MapTypeId.ROADMAP,
+          google.maps.MapTypeId.TERRAIN,
+          google.maps.MapTypeId.SATELLITE
+        ]
+      }
+      // styles: window.map_themes.dark
     });
 
+    //add bike layer
 		var bikeLayer = new google.maps.BicyclingLayer();
 		bikeLayer.setMap(map);
+
+    // Create the DIV to hold the control and call the CenterControl()
+    // constructor passing in this DIV.
+    var centerControlDiv = document.createElement('div');
+    var centerControl = new CenterControl(centerControlDiv, map);
+
+    centerControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(centerControlDiv);
+
+    //loaded callback
+    google.maps.event.addListenerOnce(map, 'idle', ()=> {
+      console.debug('map_loaded');
+    });
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(displayAndWatch, locError, {
@@ -107,7 +134,7 @@ function drawSnappedPolyline() {
 function drawRoughPolyline() {
   var snappedPolyline = new google.maps.Polyline({
     path: roughCoordinates,
-    strokeColor: 'red',
+    strokeColor: '#2ecc71',
     strokeWeight: 3
   });
 
@@ -115,7 +142,7 @@ function drawRoughPolyline() {
 }
 
 function processRoughCoordinates(data) {
-  debugging('\n' + data, + roughCoordinates.push(data) + '\n');
+  // debugging('\n' + data, + roughCoordinates.push(data) + '\n');
   roughCoordinates.push(data);
   drawRoughPolyline();
 }
@@ -141,22 +168,24 @@ function displayAndWatch(position) {
 }
 
 function setUserLocation(pos) {
-    // marker for userLocation
-    userLocation = new google.maps.Marker({
-           map : map,
-           position : new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
-           title : "You are here",
-           // icon: 'http://localhost:3000/img/marker.svg'
+  // marker for userLocation
+  userLocation = new google.maps.Marker({
+   map : map,
+   position : new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
+   title : "You are here",
+   // icon: 'http://localhost:3000/img/marker.svg'
 	});
-    // pan to updated location
-    map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+  
+  // pan to updated location
+  map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
 
-  map.addListener('center_changed', function(data) {
-    console.log(map.getCenter());
-    processRoughCoordinates(map.getCenter());
-  });
+  // recenter after moving
+  // map.addListener('center_changed', function(data) {
+  //   console.log(map.getCenter());
+  //   processRoughCoordinates(map.getCenter());
+  // });
 
-  debugging('\n' + 'Your position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed);
+  // debugging('\n' + 'Your position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed);
 }
 
 function watchCurrentPosition() {
@@ -169,10 +198,8 @@ function watchCurrentPosition() {
 
 function setMarkerPosition(marker, pos) {
     marker.setPosition(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-    debugging('\n' + 'Your updated position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed)
+    // debugging('\n' + 'Your updated position is:\n' + 'lat ' + pos.coords.latitude + 'lng: ' + pos.coords.longitude + '\n' + 'acc: ' + pos.coords.accuracy + '\n' + 'spd: ' + pos.coords.speed)
 }
-
-
 
 // document.addEventListener('click', (event)=> {
 //   event.preventDefault();
@@ -180,6 +207,5 @@ function setMarkerPosition(marker, pos) {
 //   initLocationProcedure();
 //   DrawingManager();  
 // });
-
 
 
