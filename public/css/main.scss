@@ -1,10 +1,9 @@
 @import "themes/default/variables";
-
 @import "lib/bootstrap/bootstrap";
 @import "lib/bootstrap-social";
 @import "lib/font-awesome/font-awesome";
-
 @import "themes/default/default";
+
 
 // Scaffolding
 // -------------------------
@@ -79,26 +78,31 @@ textarea {
 // Map
 // -------------------------
 
-#map {
+.map-container,
+.map {
   position: absolute;
-  top: 50px;
+  top: 25px;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: #f1f1f1;
-  display: flex;
   align-items: center;
   transition: all 250ms linear;
-
-  .tracking-active & {
-    bottom: 305px;
-  }
 }
 
+
+
 .map__loading {
-  width: 100%;
+  height: auto;
+  width: auto;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 50%;
+  position: absolute;
   text-align: center;
   font-weight: bold;
+  transform: translate3d(0, -50%, 0);
 }
 
 .console-block {
@@ -118,6 +122,34 @@ textarea {
 .avatar {
   float: right;
 }
+
+.tracking-button {
+  bottom: 40px;
+  padding: 11px 25px;
+  color: #fff;
+  position: absolute;
+  background-color: #000;
+  border: solid 2px #fff;
+  font-weight: bold;
+  border-radius: 3px;
+  left: 50%;
+  transform: translate3d(-50%,0,0);
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+}
+
+.tracking-button--start {
+  background-color: #2ecc71;
+}
+
+.tracking-button--stop {
+  background-color: #c0392b; 
+}
+
+
+
+
+
+
 
 
 
