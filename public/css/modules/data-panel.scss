@@ -1,0 +1,16 @@
+
+
+.data-panel {
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 350px;
+	position: absolute;
+	background: #000;
+	display: flex;
+	z-index: 0;
+}
+
+.data-panel__cell {
+	width: 50%;
+}

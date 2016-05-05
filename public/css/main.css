@@ -8790,6 +8790,19 @@ button.close {
     text-transform: uppercase;
     transition: all 0.2s linear; }
 
+.data-panel {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 350px;
+  position: absolute;
+  background: #000;
+  display: flex;
+  z-index: 0; }
+
+.data-panel__cell {
+  width: 50%; }
+
 html {
   position: relative;
   min-height: 100%; }
@@ -8829,8 +8842,7 @@ textarea {
 
 .logo {
   font-size: 20px;
-  width: 25px;
-  color: #4d90fc; }
+  width: 25px; }
 
 .map-container,
 .map {
@@ -8842,6 +8854,12 @@ textarea {
   background-color: #f1f1f1;
   align-items: center;
   transition: all 250ms linear; }
+
+.map {
+  z-index: 1; }
+
+.tracking-active .map {
+  bottom: 350px; }
 
 .map__loading {
   height: auto;
@@ -8880,8 +8898,12 @@ textarea {
   font-weight: bold;
   border-radius: 3px;
   left: 50%;
+  outline: 0;
   transform: translate3d(-50%, 0, 0);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); }
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  width: 100px;
+  transition: all 200ms linear; }
 
 .tracking-button--start {
   background-color: #2ecc71; }

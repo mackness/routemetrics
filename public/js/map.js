@@ -2,6 +2,7 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import { Debugger } from './utils/debugger';
 import TrackingButton from './components/TrackingButton';
+import DataPanel from './components/DataPanel';
 
 export default class Map extends Component {
 
@@ -29,10 +30,10 @@ export default class Map extends Component {
 
   _watchPosition(map, marker) {
     var positionTimer = navigator.geolocation.watchPosition((pos) => {
-      console.debug('position_updated');
       marker.setPosition(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
       map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-      this._processRoughCoordinates(map, new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+      if (this.state.tracking)
+        this._processRoughCoordinates(map, new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
     });
   }
 
@@ -88,16 +89,17 @@ export default class Map extends Component {
   }
 
   render() {
+    var trackingActive = this.state.tracking ? 'tracking-active' : '';
     return (
-      <div className="map-container">
-        <div ref="map" className="map"></div>
+      <div className={"map-container " + trackingActive}>
         <TrackingButton changeTrackingState={this._trackingState.bind(this)} tracking={this.state.tracking} />
+        <div ref="map" className="map"></div>
+        <DataPanel />
       </div>
     );
   };
 }
 
-Map.defaultProps = {};
-
+Map.defaultProps = {}
 
 

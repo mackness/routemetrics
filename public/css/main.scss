@@ -3,6 +3,7 @@
 @import "lib/bootstrap-social";
 @import "lib/font-awesome/font-awesome";
 @import "themes/default/default";
+@import "modules/data-panel";
 
 
 // Scaffolding
@@ -73,7 +74,6 @@ textarea {
 .logo {
   font-size: 20px;
   width: 25px;
-  color: #4d90fc;
 }
 
 // Map
@@ -91,6 +91,13 @@ textarea {
   transition: all 250ms linear;
 }
 
+.map {
+  z-index: 1;
+}
+
+.tracking-active .map {
+  bottom: 350px;
+}
 
 
 .map__loading {
@@ -134,8 +141,12 @@ textarea {
   font-weight: bold;
   border-radius: 3px;
   left: 50%;
+  outline: 0;
   transform: translate3d(-50%,0,0);
   box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  z-index: 100;
+  width: 100px;
+  transition: all 200ms linear;
 }
 
 .tracking-button--start {
