@@ -8,16 +8,31 @@ export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tracking: false
+      tracking: false,
+      roughCoordinates: []
     };
   }
 
+  _drawRoughPolyline(map) {
+    var snappedPolyline = new google.maps.Polyline({
+      path: this.state.roughCoordinates,
+      strokeColor: 'red',
+      strokeWeight: 3
+    });
+    snappedPolyline.setMap(map);
+  }
+
+  _processRoughCoordinates(map, data) {
+    this.state.roughCoordinates.push(data);
+    this._drawRoughPolyline(map);
+  }
+
   _watchPosition(map, marker) {
-    var positionTimer = navigator.geolocation.watchPosition(function(pos) {
+    var positionTimer = navigator.geolocation.watchPosition((pos) => {
       console.debug('position_updated');
       marker.setPosition(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
       map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-      processRoughCoordinates(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+      this._processRoughCoordinates(map, new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
     });
   }
 
@@ -25,14 +40,10 @@ export default class Map extends Component {
     map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
   }
 
-  _handleClick(event) {
+  _trackingState(tracking) {
     this.setState({
       tracking: !this.state.tracking
     });
-  }
-
-  _trackingState(tracking) {
-    console.log(tracking);
   }
 
   componentDidMount() {

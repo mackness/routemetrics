@@ -8829,7 +8829,8 @@ textarea {
 
 .logo {
   font-size: 20px;
-  width: 25px; }
+  width: 25px;
+  color: #4d90fc; }
 
 .map-container,
 .map {

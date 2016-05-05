@@ -10,7 +10,7 @@ export default class TrackingButton extends Component {
 
   handleClick(event) {
     this.props.changeTrackingState()
-  },
+  }
 
   render() {
     if (this.props.tracking) {
@@ -19,7 +19,7 @@ export default class TrackingButton extends Component {
       );
     } else {
       return (
-        <button  className="tracking-button tracking-button--start">START</button>
+        <button onClick={this.handleClick.bind(this)} className="tracking-button tracking-button--start">START</button>
       );
     }
   };

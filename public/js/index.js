@@ -3,4 +3,6 @@ import ReactDOM from 'react-dom';
 import Map from './Map';
 
 
-ReactDOM.render(<Map />, document.getElementById('outlet'));
+if (document.getElementById('outlet')) {
+	ReactDOM.render(<Map />, document.getElementById('outlet'));
+}
