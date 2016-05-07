@@ -20210,12 +20210,12 @@
 	  _createClass(Map, [{
 	    key: '_drawRoughPolyline',
 	    value: function _drawRoughPolyline(map) {
-	      var snappedPolyline = new google.maps.Polyline({
+	      var roughPolyLine = new google.maps.Polyline({
 	        path: this.state.roughCoordinates,
 	        strokeColor: 'red',
 	        strokeWeight: 3
 	      });
-	      snappedPolyline.setMap(map);
+	      roughPolyLine.setMap(map);
 	    }
 	  }, {
 	    key: '_processRoughCoordinates',
@@ -20235,11 +20235,15 @@
 	      });
 	    }
 	  }, {
-	    key: '_recenterMap',
-	    value: function _recenterMap() {
+	    key: '_centerMap',
+	    value: function _centerMap() {
 	      var map = this.state.map,
 	          marker = this.state.marker;
-	      map.panTo(marker.getPosition());
+	      setTimeout(function () {
+	        var center = map.getCenter();
+	        google.maps.event.trigger(map, "resize");
+	        map.panTo(center);
+	      }, 200);
 	    }
 	  }, {
 	    key: '_setInitialPosition',
@@ -20249,7 +20253,7 @@
 	  }, {
 	    key: '_trackingState',
 	    value: function _trackingState(tracking) {
-	      this._recenterMap();
+	      this._centerMap();
 	      this.setState({
 	        tracking: !this.state.tracking
 	      });

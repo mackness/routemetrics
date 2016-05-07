@@ -17,12 +17,12 @@ export default class Map extends Component {
   }
 
   _drawRoughPolyline(map) {
-    var snappedPolyline = new google.maps.Polyline({
+    var roughPolyLine = new google.maps.Polyline({
       path: this.state.roughCoordinates,
       strokeColor: 'red',
       strokeWeight: 3
     });
-    snappedPolyline.setMap(map);
+    roughPolyLine.setMap(map);
   }
 
   _processRoughCoordinates(map, data) {
@@ -39,10 +39,14 @@ export default class Map extends Component {
     });
   }
 
-  _recenterMap() {
+  _centerMap() {
     let map = this.state.map,
         marker = this.state.marker;
-    map.panTo(marker.getPosition());
+    setTimeout(()=> {
+      var center = map.getCenter();
+      google.maps.event.trigger(map, "resize");
+      map.panTo(center);
+    },200)
   }
 
   _setInitialPosition(map, pos) {
@@ -50,7 +54,7 @@ export default class Map extends Component {
   }
 
   _trackingState(tracking) {
-    this._recenterMap();
+    this._centerMap();
     this.setState({
       tracking: !this.state.tracking
     });
