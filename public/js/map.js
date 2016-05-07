@@ -10,7 +10,9 @@ export default class Map extends Component {
     super(props);
     this.state = {
       tracking: false,
-      roughCoordinates: []
+      roughCoordinates: [],
+      map: {},
+      marker: {}
     };
   }
 
@@ -37,18 +39,25 @@ export default class Map extends Component {
     });
   }
 
+  _recenterMap() {
+    let map = this.state.map,
+        marker = this.state.marker;
+    map.panTo(marker.getPosition());
+  }
+
   _setInitialPosition(map, pos) {
     map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
   }
 
   _trackingState(tracking) {
+    this._recenterMap();
     this.setState({
       tracking: !this.state.tracking
     });
   }
 
   componentDidMount() {
-    var map = new google.maps.Map(this.refs.map, {
+    this.state.map = new google.maps.Map(this.refs.map, {
       zoom: 18,
       disableDefaultUI: true,
       mapTypeControl: true,
@@ -63,7 +72,7 @@ export default class Map extends Component {
 
     //bike layer
     var bikeLayer = new google.maps.BicyclingLayer();
-    bikeLayer.setMap(map);
+    bikeLayer.setMap(this.state.map);
 
     var locationSettings = {
       enableHighAccuracy : true,
@@ -73,13 +82,13 @@ export default class Map extends Component {
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos)=> {
-      var marker = new google.maps.Marker({
-        map : map,
+      this.state.marker = new google.maps.Marker({
+        map : this.state.map,
         position : new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
         title : "You are here",
       });
-      this._setInitialPosition(map, pos);
-      this._watchPosition(map, marker);
+      this._setInitialPosition(this.state.map, pos);
+      this._watchPosition(this.state.map, this.state.marker);
       }, (err)=> {
         alert("Your phone does not support the Geolocation API", err);
       }, locationSettings);
@@ -92,7 +101,7 @@ export default class Map extends Component {
     var trackingActive = this.state.tracking ? 'tracking-active' : '';
     return (
       <div className={"map-container " + trackingActive}>
-        <TrackingButton changeTrackingState={this._trackingState.bind(this)} tracking={this.state.tracking} />
+        <TrackingButton changeTrackingState={this._trackingState.bind(this)} tracking={this.state.tracking} map={this.state.map} />
         <div ref="map" className="map"></div>
         <DataPanel />
       </div>

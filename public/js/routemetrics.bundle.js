@@ -20200,7 +20200,9 @@
 
 	    _this.state = {
 	      tracking: false,
-	      roughCoordinates: []
+	      roughCoordinates: [],
+	      map: {},
+	      marker: {}
 	    };
 	    return _this;
 	  }
@@ -20233,6 +20235,13 @@
 	      });
 	    }
 	  }, {
+	    key: '_recenterMap',
+	    value: function _recenterMap() {
+	      var map = this.state.map,
+	          marker = this.state.marker;
+	      map.panTo(marker.getPosition());
+	    }
+	  }, {
 	    key: '_setInitialPosition',
 	    value: function _setInitialPosition(map, pos) {
 	      map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
@@ -20240,6 +20249,7 @@
 	  }, {
 	    key: '_trackingState',
 	    value: function _trackingState(tracking) {
+	      this._recenterMap();
 	      this.setState({
 	        tracking: !this.state.tracking
 	      });
@@ -20249,7 +20259,7 @@
 	    value: function componentDidMount() {
 	      var _this3 = this;
 
-	      var map = new google.maps.Map(this.refs.map, {
+	      this.state.map = new google.maps.Map(this.refs.map, {
 	        zoom: 18,
 	        disableDefaultUI: true,
 	        mapTypeControl: true,
@@ -20261,7 +20271,7 @@
 
 	      //bike layer
 	      var bikeLayer = new google.maps.BicyclingLayer();
-	      bikeLayer.setMap(map);
+	      bikeLayer.setMap(this.state.map);
 
 	      var locationSettings = {
 	        enableHighAccuracy: true,
@@ -20271,13 +20281,13 @@
 
 	      if (navigator.geolocation) {
 	        navigator.geolocation.getCurrentPosition(function (pos) {
-	          var marker = new google.maps.Marker({
-	            map: map,
+	          _this3.state.marker = new google.maps.Marker({
+	            map: _this3.state.map,
 	            position: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
 	            title: "You are here"
 	          });
-	          _this3._setInitialPosition(map, pos);
-	          _this3._watchPosition(map, marker);
+	          _this3._setInitialPosition(_this3.state.map, pos);
+	          _this3._watchPosition(_this3.state.map, _this3.state.marker);
 	        }, function (err) {
 	          alert("Your phone does not support the Geolocation API", err);
 	        }, locationSettings);
@@ -20292,7 +20302,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: "map-container " + trackingActive },
-	        _react2.default.createElement(_TrackingButton2.default, { changeTrackingState: this._trackingState.bind(this), tracking: this.state.tracking }),
+	        _react2.default.createElement(_TrackingButton2.default, { changeTrackingState: this._trackingState.bind(this), tracking: this.state.tracking, map: this.state.map }),
 	        _react2.default.createElement('div', { ref: 'map', className: 'map' }),
 	        _react2.default.createElement(_DataPanel2.default, null)
 	      );
@@ -30215,8 +30225,8 @@
 	  }
 
 	  _createClass(TrackingButton, [{
-	    key: 'handleClick',
-	    value: function handleClick(event) {
+	    key: '_handleClick',
+	    value: function _handleClick(event) {
 	      this.props.changeTrackingState();
 	    }
 	  }, {
@@ -30225,13 +30235,13 @@
 	      if (this.props.tracking) {
 	        return _react2.default.createElement(
 	          'button',
-	          { onClick: this.handleClick.bind(this), className: 'tracking-button tracking-button--stop' },
+	          { onClick: this._handleClick.bind(this), className: 'tracking-button tracking-button--stop' },
 	          'STOP'
 	        );
 	      } else {
 	        return _react2.default.createElement(
 	          'button',
-	          { onClick: this.handleClick.bind(this), className: 'tracking-button tracking-button--start' },
+	          { onClick: this._handleClick.bind(this), className: 'tracking-button tracking-button--start' },
 	          'START'
 	        );
 	      }

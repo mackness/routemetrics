@@ -8,18 +8,18 @@ export default class TrackingButton extends Component {
     this.state = {}
   }
 
-  handleClick(event) {
-    this.props.changeTrackingState()
+  _handleClick(event) {
+    this.props.changeTrackingState();
   }
 
   render() {
     if (this.props.tracking) {
       return (
-        <button onClick={this.handleClick.bind(this)} className="tracking-button tracking-button--stop">STOP</button>
+        <button onClick={this._handleClick.bind(this)} className="tracking-button tracking-button--stop">STOP</button>
       );
     } else {
       return (
-        <button onClick={this.handleClick.bind(this)} className="tracking-button tracking-button--start">START</button>
+        <button onClick={this._handleClick.bind(this)} className="tracking-button tracking-button--start">START</button>
       );
     }
   };
