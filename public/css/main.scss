@@ -12,6 +12,11 @@
 html {
   position: relative;
   min-height: 100%;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
 body {
