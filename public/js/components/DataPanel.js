@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import React, { Component } from 'react';
+// import moment from 'moment';
 
 export default class DataPanel extends Component {
 

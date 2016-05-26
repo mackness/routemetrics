@@ -12,7 +12,10 @@ export default class Map extends Component {
       tracking: false,
       roughCoordinates: [],
       map: {},
-      marker: {}
+      marker: {},
+      speed: '',
+      distance: '',
+      time: ''
     };
   }
 
@@ -32,8 +35,12 @@ export default class Map extends Component {
 
   _watchPosition(map, marker) {
     var positionTimer = navigator.geolocation.watchPosition((pos) => {
-      marker.setPosition(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-      map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+      marker.setPosition(
+        new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+      );
+      map.panTo(
+        new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+      );
       if (this.state.tracking)
         this._processRoughCoordinates(map, new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
     });
