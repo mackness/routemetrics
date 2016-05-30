@@ -15,7 +15,8 @@ export default class Map extends Component {
       marker: {},
       speed: '',
       distance: '',
-      time: ''
+      time: '',
+      location: []
     };
   }
 
@@ -34,15 +35,15 @@ export default class Map extends Component {
   }
 
   _watchPosition(map, marker) {
-    var positionTimer = navigator.geolocation.watchPosition((pos) => {
-      marker.setPosition(
-        new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
-      );
-      map.panTo(
-        new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
-      );
-      if (this.state.tracking)
+    var position = navigator.geolocation.watchPosition((pos) => {
+      marker.setPosition(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+      map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+      this.setState({
+        location: [pos.coords.latitude, pos.coords.longitude]
+      });
+      if (this.state.tracking) {
         this._processRoughCoordinates(map, new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+      }
     });
   }
 
@@ -52,8 +53,10 @@ export default class Map extends Component {
     setTimeout(()=> {
       var center = map.getCenter();
       google.maps.event.trigger(map, "resize");
-      map.panTo(center);
-    },200)
+      if (typeof center == 'object') {
+        map.panTo(center);
+      }
+    },200) // run when css animation finishes
   }
 
   _setInitialPosition(map, pos) {
@@ -98,6 +101,9 @@ export default class Map extends Component {
         position : new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
         title : "You are here",
       });
+      this.setState({
+        location: [pos.coords.latitude, pos.coords.longitude]
+      });
       this._setInitialPosition(this.state.map, pos);
       this._watchPosition(this.state.map, this.state.marker);
       }, (err)=> {
@@ -114,8 +120,8 @@ export default class Map extends Component {
       <div className={"map-container " + trackingActive}>
         <TrackingButton changeTrackingState={this._trackingState.bind(this)} tracking={this.state.tracking} map={this.state.map} />
         <div ref="map" className="map"></div>
-        <DataPanel />
-      </div>
+        <DataPanel location={this.state.location}/>
+      </div> 
     );
   };
 }
