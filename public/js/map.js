@@ -97,9 +97,9 @@ export default class Map extends Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos)=> {
       this.state.marker = new google.maps.Marker({
-        map : this.state.map,
-        position : new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
-        title : "You are here",
+        map: this.state.map,
+        position: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
+        title: "You are here",
       });
       this.setState({
         location: [pos.coords.latitude, pos.coords.longitude]
