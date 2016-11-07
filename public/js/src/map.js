@@ -6,7 +6,8 @@ function Map (element, config) {
   this.lat = null;
   this.lng = null;
   this.elements = {
-    "mapContainer" : document.querySelector('#map')
+    "mapContainer" : document.querySelector('#map'),
+    "body" : document.body
   }
 
   this.init();
@@ -40,15 +41,30 @@ Map.prototype.marker = function(coords) {
 }
 
 Map.prototype.insertControl = function(element, position) {
-  console.log(this.mapReady)
-  // console.log(element, position)
-  // this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(element);
+  this.map.controls[google.maps.ControlPosition[position]].push(element);
 }
 
-Map.prototype.startTrackingButton = function() {
-  console.log('this runs')
+Map.prototype.trackingButton = function() {
   var button = document.createElement('button');
-  button.innerHTML = 'start';
+  button.classList.add('tracking-button');
+  button.classList.add('tracking-button--start');
+  button.innerHTML = 'Start';
+
+  button.addEventListener('click', function(event) {
+    event.preventDefault()
+    if (button.classList.contains('tracking-button--start')) {
+      button.classList.remove('tracking-button--start')
+      button.classList.add('tracking-button--stop')
+      button.innerHTML = 'Stop';
+      this.elements.body.classList.add('tracking-active')
+    } else {
+      button.classList.remove('tracking-button--stop')
+      button.classList.add('tracking-button--start')
+      button.innerHTML = 'Start';
+      this.elements.body.classList.remove('tracking-active')
+    }
+  }.bind(this))
+
   this.insertControl(button, 'BOTTOM_CENTER')
 }
 
@@ -57,6 +73,7 @@ Map.prototype.init = function() {
   function success(coords) {
     this.initMap(this.elements.mapContainer, coords)
     this.marker(coords)
+    this.trackingButton()
   }
 
   function error() {

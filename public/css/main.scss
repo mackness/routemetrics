@@ -137,7 +137,6 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
 }
 
 .tracking-button {
-  bottom: 40px;
   padding: 11px 25px;
   color: #fff;
   position: absolute;
@@ -147,11 +146,11 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
   border-radius: 3px;
   left: 50%;
   outline: 0;
-  transform: translate3d(-50%,0,0);
   box-shadow: 0 2px 6px rgba(0,0,0,.3);
   z-index: 100;
   width: 100px;
-  transition: all 200ms linear;
+  margin-bottom: 40px;
+  text-transform: uppercase;
 }
 
 .tracking-button--start {
