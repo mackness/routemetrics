@@ -11220,29 +11220,21 @@ textarea {
   font-size: 20px;
   width: 25px; }
 
-.outlet {
-  width: 100%;
-  overflow: hidden; }
-
 .navbar-default {
   overflow: hidden; }
 
-.map-container,
-.map {
-  position: absolute;
-  top: 25px;
+#map {
+  top: 0;
+  left: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background-color: #f1f1f1;
-  align-items: center;
-  transition: all 250ms linear; }
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 100; }
 
-.map {
-  z-index: 1; }
-
-.tracking-active .map {
-  bottom: 350px; }
+img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
+  display: none; }
 
 .map__loading {
   height: auto;

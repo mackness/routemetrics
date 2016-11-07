@@ -2,8 +2,9 @@ extends layout
 
 block content
   if user
-    #outlet
-      span.map__loading Locating...
+    #map-container
+      #map
+        span.map__loading Locating...
   else
     .page-header
       h3 Sign in
@@ -41,9 +42,13 @@ block content
             i.fa.fa-github
             | Sign in with GitHub
 
+
+
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg')
-  script(src='/js/routemetrics.bundle.js')
+  script(src='/js/dist/map.js')
+  script.
+    new Map(document.getElementById('map'),{})
 
 
 
