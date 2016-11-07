@@ -21542,7 +21542,7 @@
 	      this.state.map = new google.maps.Map(this.refs.map, {
 	        zoom: 18,
 	        disableDefaultUI: true,
-	        mapTypeControl: true,
+	        mapTypeControl: false,
 	        mapTypeControlOptions: {
 	          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
 	          mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.TERRAIN]
@@ -31561,35 +31561,31 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DataPanel).call(this, props));
 
 	    _this.state = {
-	      stopwatch: '',
-	      reset: '0:00:00'
+	      stopwatch: ''
 	    };
+	    _this.timer = new _timerStopwatch2.default();
+	    _this.start = _this.timer.start();
+	    _this.stop = _this.timer.stop();
+	    _this.reset = _this.timer.reset();
 	    return _this;
 	  }
 
 	  _createClass(DataPanel, [{
-	    key: 'start',
-	    value: function start() {
-	      var _this2 = this;
-
-	      // var timer = new Stopwatch();
-	      // timer.start();
-	      setInterval(function () {
-	        var hours = Math.floor(timer.ms / (60 * 60 * 1000));
-	        var minutes = Math.floor(timer.ms / (60 * 1000));
-	        var seconds = Math.floor(timer.ms / 1000);
-	        var time = [hours, minutes, seconds].join(':');
-	        console.log(time);
-	        _this2.setState({ stopwatch: time });
-	      }, 500);
-	    }
+	    key: 'startStopwatch',
+	    value: function startStopwatch() {}
 	  }, {
-	    key: 'stop',
-	    value: function stop() {}
+	    key: 'stopStopwatch',
+	    value: function stopStopwatch() {
+	      this.timer.stop();
+	      this.timer.reset();
+	      // this.setState({
+	      //   stopwatch: '0:00:00'
+	      // })
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      this.props.tracking ? this.start() : this.stop();
+	      this.props.tracking ? this.startStopwatch() : this.stopStopwatch();
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'data-panel' },
@@ -31599,7 +31595,7 @@
 	          _react2.default.createElement(
 	            'span',
 	            { className: 'data-panel__text' },
-	            this.props.tracking ? this.state.stopwatch : this.state.reset
+	            this.state.stopwatch
 	          )
 	        ),
 	        _react2.default.createElement(

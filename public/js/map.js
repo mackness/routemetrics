@@ -74,7 +74,7 @@ export default class Map extends Component {
     this.state.map = new google.maps.Map(this.refs.map, {
       zoom: 18,
       disableDefaultUI: true,
-      mapTypeControl: true,
+      mapTypeControl: false,
       mapTypeControlOptions: {
         style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
         mapTypeIds: [

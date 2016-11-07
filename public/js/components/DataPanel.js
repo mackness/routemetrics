@@ -9,33 +9,31 @@ export default class DataPanel extends Component {
     super(props);
     this.state = {
       stopwatch: '',
-      reset: '0:00:00'
     }
+    this.timer = new Stopwatch();
+    this.start = this.timer.start();
+    this.stop = this.timer.stop();
+    this.reset = this.timer.reset();
   }
 
-  start() {
-    // var timer = new Stopwatch();
-    // timer.start();
-    setInterval(()=> {
-      var hours = Math.floor(timer.ms / (60 * 60 * 1000))
-      var minutes = Math.floor(timer.ms / (60 * 1000))
-      var seconds = Math.floor(timer.ms / 1000)
-      var time = [hours,minutes,seconds].join(':')
-      console.log(time)
-      this.setState({stopwatch: time})
-    },500)
+  startStopwatch() {
+    
   }
 
-  stop() {
-
+  stopStopwatch() {
+    this.timer.stop();
+    this.timer.reset();
+    // this.setState({
+    //   stopwatch: '0:00:00'
+    // })
   }
 
   render() {
-    this.props.tracking ? this.start() : this.stop();
+    this.props.tracking ? this.startStopwatch() : this.stopStopwatch();
     return (
       <div className="data-panel">
         <div className="data-panel__cell data-panel__time">
-          <span className="data-panel__text">{this.props.tracking ? this.state.stopwatch : this.state.reset }</span>
+          <span className="data-panel__text">{this.state.stopwatch}</span>
         </div>
         <div className="data-panel__cell data-panel__speed">
           <span className="data-panel__text">{this.props.speed || 0}</span>
