@@ -31572,8 +31572,8 @@
 	    value: function start() {
 	      var _this2 = this;
 
-	      var timer = new _timerStopwatch2.default();
-	      timer.start();
+	      // var timer = new Stopwatch();
+	      // timer.start();
 	      setInterval(function () {
 	        var hours = Math.floor(timer.ms / (60 * 60 * 1000));
 	        var minutes = Math.floor(timer.ms / (60 * 1000));

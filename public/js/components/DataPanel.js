@@ -14,8 +14,8 @@ export default class DataPanel extends Component {
   }
 
   start() {
-    var timer = new Stopwatch();
-    timer.start();
+    // var timer = new Stopwatch();
+    // timer.start();
     setInterval(()=> {
       var hours = Math.floor(timer.ms / (60 * 60 * 1000))
       var minutes = Math.floor(timer.ms / (60 * 1000))
