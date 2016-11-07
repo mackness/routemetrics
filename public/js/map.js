@@ -63,7 +63,7 @@ export default class Map extends Component {
     map.panTo(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
   }
 
-  _trackingState(tracking) {
+  trackingState(tracking) {
     this._centerMap();
     this.setState({
       tracking: !this.state.tracking
@@ -102,7 +102,8 @@ export default class Map extends Component {
         title: "You are here",
       });
       this.setState({
-        location: [pos.coords.latitude, pos.coords.longitude]
+        location: [pos.coords.latitude, pos.coords.longitude],
+        speed: pos.coords.speed
       });
       this._setInitialPosition(this.state.map, pos);
       this._watchPosition(this.state.map, this.state.marker);
@@ -118,9 +119,13 @@ export default class Map extends Component {
     var trackingActive = this.state.tracking ? 'tracking-active' : '';
     return (
       <div className={"map-container " + trackingActive}>
-        <TrackingButton changeTrackingState={this._trackingState.bind(this)} tracking={this.state.tracking} map={this.state.map} />
+        <TrackingButton trackingState={this.trackingState.bind(this)} tracking={this.state.tracking} map={this.state.map} />
         <div ref="map" className="map"></div>
-        <DataPanel location={this.state.location}/>
+        <DataPanel 
+          location={this.state.location}
+          speed={this.state.speed}
+          tracking={this.state.tracking}
+        />
       </div> 
     );
   };

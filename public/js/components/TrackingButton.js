@@ -9,7 +9,7 @@ export default class TrackingButton extends Component {
   }
 
   _handleClick(event) {
-    this.props.changeTrackingState();
+    this.props.trackingState();
   }
 
   render() {

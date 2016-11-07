@@ -1,11 +1,6 @@
 .navbar.navbar-default.navbar-fixed-top
   .container
     .navbar-header
-      if user
-        if user.profile.picture
-          a(href='/account').avatar
-            img(src='#{user.profile.picture}')
-        else
       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
         span.sr-only Toggle navigation
         span.icon-bar
@@ -28,5 +23,3 @@
             a(href='/settings') Settings
           li
             a(href='/logout') Logout
-          li(class=(title == 'Contact') ? 'active' : undefined)
-            a(href='/contact') Contact
