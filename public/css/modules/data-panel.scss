@@ -1,22 +1,32 @@
 
 
 .data-panel {
-	left: 0;
-	right: 0;
-	bottom: 0;
-	height: 350px;
-	position: absolute;
-	background: #fff;
-	display: flex;
-	flex-wrap: wrap;
 	z-index: 0;
+	width: 100%;
+	padding: 10px;
+	height: 490px;
+	display: block;
+	font-size: 16px;
+	z-index: 0 !important;
+	right: 0 !important;
+	position: fixed !important;
+	background: rgba(255,255,255,0.9);
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+	transform: translate(0,100%);
+
+	.tracking-active & {
+		transform: translate(0,0);		
+	}
 }
 
-.data-panel__cell {
-	width: 50%;
-	height: 50%;
-	display: flex;
-	align-content: center;
-	color: #000;
-	padding: 10px;
+.data-panel__label {
+    float: left;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.data-panel__row {
+	float: left;
+	width: 100%;
+	margin-bottom: 10px;
 }

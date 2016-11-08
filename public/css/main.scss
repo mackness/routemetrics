@@ -151,6 +151,7 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
   width: 100px;
   margin-bottom: 40px;
   text-transform: uppercase;
+  z-index: 1 !important;
 }
 
 .tracking-button--start {
