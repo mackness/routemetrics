@@ -1,4 +1,5 @@
 
+
 function Map (element, config) {
 
   this.mapReady = false;
@@ -6,6 +7,7 @@ function Map (element, config) {
   this.roughCoords = [];
   this.watch = '';
   this.speed = 0;
+  this.key = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
   this.geolocation = "geolocation" in navigator;
   this.elements = {
     "mapContainer" : document.querySelector('#map'),
@@ -35,6 +37,29 @@ Map.prototype.watchPosition = function(cb,eb) {
   } else {
     alert('sorry no geolocation support')
   }
+}
+
+Map.prototype.snapToRoads = function() {
+
+  var path = this.roughCoords.map(function(coord, i) {
+    return [coord.lat(),coord.lng()].join(',')
+  }).join('|')
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://roads.googleapis.com/v1/snapToRoads?path=' + path + '&key=' + this.key);
+  xhr.onload = function() {
+      if (xhr.status === 200) {
+          console.log(xhr.responseText);
+      }
+      else {
+          console.log(xhr.status);
+      }
+  };
+  xhr.send();
+}
+
+Map.prototype.calculateDistance = function() {
+
 }
 
 Map.prototype.drawPloyline = function() {
@@ -137,16 +162,24 @@ Map.prototype.dataPanelElement = function() {
 }
 
 Map.prototype.init = function() {
-  console.log('init:', this.tracking)
   if (this.tracking) {
     this.watchPosition(
       function(coords) {
         var location = new google.maps.LatLng(coords.latitude, coords.longitude)
         var shifted = new google.maps.LatLng(coords.latitude - 0.0008, coords.longitude)
+        
         this.roughCoords.push(location)
+        this.speed = coords.speed || 0;
+
+        console.log(this.roughCoords)
+
+        if (this.roughCoords.length % 10 == 0) {
+          this.snapToRoads()
+          this.calculateDistance()
+        }
+        
         this.drawPloyline()
         this.map.panTo(shifted);
-        this.speed = coords.speed || 0;
         this.speedElement()
       }.bind(this),
 

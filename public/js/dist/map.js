@@ -1,7 +1,7 @@
 "use strict";
 
 function Map() {
-  this.mapReady = !1, this.tracking = !1, this.roughCoords = [], this.watch = "", this.speed = 0, this.geolocation = "geolocation" in navigator, this.elements = { mapContainer: document.querySelector("#map"), body: document.body }, this.init();
+  this.mapReady = !1, this.tracking = !1, this.roughCoords = [], this.watch = "", this.speed = 0, this.key = "AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg", this.geolocation = "geolocation" in navigator, this.elements = { mapContainer: document.querySelector("#map"), body: document.body }, this.init();
 }Map.prototype.getCurrentLocation = function (t, e) {
   this.geolocation ? navigator.geolocation.getCurrentPosition(function (e) {
     t(e.coords);
@@ -14,7 +14,14 @@ function Map() {
   }, function (e) {
     t(e);
   }) : alert("sorry no geolocation support");
-}, Map.prototype.drawPloyline = function () {
+}, Map.prototype.snapToRoads = function () {
+  var t = this.roughCoords.map(function (t) {
+    return [t.lat(), t.lng()].join(",");
+  }).join("|"),
+      e = new XMLHttpRequest();e.open("GET", "https://roads.googleapis.com/v1/snapToRoads?path=" + t + "&key=" + this.key), e.onload = function () {
+    200 === e.status ? console.log(e.responseText) : console.log(e.status);
+  }, e.send();
+}, Map.prototype.calculateDistance = function () {}, Map.prototype.drawPloyline = function () {
   var t = new google.maps.Polyline({ path: this.roughCoords, strokeColor: "green", strokeWeight: 3 });t.setMap(this.map);
 }, Map.prototype.initMap = function (t, e) {
   this.map = new google.maps.Map(t, { zoom: 18, mapTypeControl: !1, disableDefaultUI: !0, center: { lat: e.latitude, lng: e.longitude } });
@@ -37,9 +44,9 @@ function Map() {
 }, Map.prototype.dataPanelElement = function () {
   var t = document.createElement("div");t.classList.add("data-panel"), t.appendChild(this.stopwatchElement()), t.appendChild(this.speedElement()), this.insertMapElement(t, "BOTTOM_RIGHT");
 }, Map.prototype.init = function () {
-  console.log("init:", this.tracking), this.tracking ? this.watchPosition(function (t) {
+  this.tracking ? this.watchPosition(function (t) {
     var e = new google.maps.LatLng(t.latitude, t.longitude),
-        n = new google.maps.LatLng(t.latitude - 8e-4, t.longitude);this.roughCoords.push(e), this.drawPloyline(), this.map.panTo(n), this.speed = t.speed || 0, this.speedElement();
+        n = new google.maps.LatLng(t.latitude - 8e-4, t.longitude);this.roughCoords.push(e), this.speed = t.speed || 0, console.log(this.roughCoords), this.roughCoords.length % 10 == 0 && (this.snapToRoads(), this.calculateDistance()), this.drawPloyline(), this.map.panTo(n), this.speedElement();
   }.bind(this), function (t) {
     console.log("error", t);
   }) : this.getCurrentLocation(function (t) {

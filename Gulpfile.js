@@ -24,8 +24,9 @@ var gulp      = require('gulp'),
  *
  */
 gulp.task('scripts', function () {
-  return gulp.src('./public/js/src/map.js')
+  return gulp.src(['./public/js/src/map.js'])
     .pipe(uglify())
+    .pipe(gulpImports())
     .pipe(babel({presets: ['es2015']}))
     .pipe(gulp.dest('./public/js/dist/'));
 });
@@ -71,3 +72,4 @@ gulp.task('watch', function () {
     gulp.run('scripts');
   });
 });
+
