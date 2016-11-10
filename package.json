@@ -9,6 +9,9 @@
     "start": "node app.js | gulp watch",
     "test": "mocha --reporter spec --timeout 5000"
   },
+  "engines": {
+    "node": "0.12.15"
+  },
   "dependencies": {
     "async": "^2.0.0-rc.3",
     "bcrypt-nodejs": "^0.0.3",
