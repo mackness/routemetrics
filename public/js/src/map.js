@@ -5,8 +5,10 @@ function Map (element, config) {
   this.mapReady = false;
   this.tracking = false;
   this.roughCoords = [];
+  this.snappedCoords = [];
   this.watch = '';
   this.speed = 0;
+  this.distance = 0;
   this.key = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
   this.geolocation = "geolocation" in navigator;
   this.elements = {
@@ -39,27 +41,41 @@ Map.prototype.watchPosition = function(cb,eb) {
   }
 }
 
-Map.prototype.snapToRoads = function() {
-
-  var path = this.roughCoords.map(function(coord, i) {
+Map.prototype.formatPath = function(coords) {
+  return coords.map(function(coord, i) {
     return [coord.lat(),coord.lng()].join(',')
   }).join('|')
+}
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://roads.googleapis.com/v1/snapToRoads?path=' + path + '&key=' + this.key);
-  xhr.onload = function() {
-      if (xhr.status === 200) {
-          console.log(xhr.responseText);
-      }
-      else {
-          console.log(xhr.status);
-      }
-  };
-  xhr.send();
+Map.prototype.snapToRoads = function() {
+  Ajax(
+    'https://roads.googleapis.com/v1/snapToRoads?path=' + this.formatPath(this.roughCoords) + '&key=' + this.key,
+    function(response) {
+      this.snappedCoords = response.snappedPoints
+    }.bind(this),
+    function(err) {
+      console.log(err)
+    }
+  )
 }
 
 Map.prototype.calculateDistance = function() {
-
+  var service = new google.maps.DistanceMatrixService;
+  service.getDistanceMatrix({
+    origins: [this.roughCoords[0]],
+    destinations: [this.roughCoords[this.roughCoords.length-1]],
+    travelMode: 'BICYCLING',
+    unitSystem: google.maps.UnitSystem.IMPERIAL,
+    avoidHighways: false,
+    avoidTolls: false
+  }, function(response, status) {
+    if (status !== 'OK') {
+      alert('Error was: ' + status);
+    } else {
+      this.distance = response.rows[0].elements[0].distance.text;
+      this.elements.distanceElement.innerHTML = this.distance
+    }
+  }.bind(this));
 }
 
 Map.prototype.drawPloyline = function() {
@@ -133,6 +149,7 @@ Map.prototype.stopwatchElement = function() {
   row.appendChild(label)
   row.appendChild(watch)
   this.watch = watch;
+  this.elements['stopwatchElement'] = watch
   return row
 }
 
@@ -148,6 +165,23 @@ Map.prototype.speedElement = function() {
   row.appendChild(label)
   row.appendChild(speed)
   this.speed = speed;
+  this.elements['speedElement'] = speed  
+  return row
+}
+
+Map.prototype.distanceElement = function() {
+  var distance = document.createElement('div');
+  var row = document.createElement('div');
+  var label = document.createElement('span');
+  label.innerHTML = 'distance: ';
+  console.log('dist', this.distance)
+  label.classList.add('data-panel__label');
+  row.classList.add('data-panel__row');
+  distance.classList.add('data-panel__distance');
+  row.appendChild(label)
+  row.appendChild(distance)
+  distance.innerHTML = this.distance;
+  this.elements['distanceElement'] = distance
   return row
 }
 
@@ -156,7 +190,7 @@ Map.prototype.dataPanelElement = function() {
   panel.classList.add('data-panel');
   panel.appendChild(this.stopwatchElement());
   panel.appendChild(this.speedElement());
-  // panel.appendChild(this.distanceElement());
+  panel.appendChild(this.distanceElement());
   // panel.appendChild(this.elevationChangeElement());
   this.insertMapElement(panel, 'BOTTOM_RIGHT');
 }
@@ -169,9 +203,7 @@ Map.prototype.init = function() {
         var shifted = new google.maps.LatLng(coords.latitude - 0.0008, coords.longitude)
         
         this.roughCoords.push(location)
-        this.speed = coords.speed || 0;
-
-        console.log(this.roughCoords)
+        this.elements['speedElement'].innerHTML = coords.speed || 0;
 
         if (this.roughCoords.length % 10 == 0) {
           this.snapToRoads()
