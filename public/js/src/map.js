@@ -68,7 +68,7 @@ Map.prototype.getDistance = function() {
     origins: [this.roughCoords[0]],
     destinations: [this.roughCoords[this.roughCoords.length-1]],
     travelMode: 'BICYCLING',
-    unitSystem: google.maps.UnitSystem.IMPERIAL,
+    unitSystem: google.maps.UnitSystem.METRIC,
     avoidHighways: false,
     avoidTolls: false
   }, function(response, status) {
@@ -82,7 +82,7 @@ Map.prototype.getDistance = function() {
 }
 
 Map.prototype.getElevation = function(path, elevator, map) {
-  elevator.getElevationAlongPath({
+  this.elevationService.getElevationAlongPath({
     'path': path,
     'samples': 100
   }, this.plotElevation.bind(this));
@@ -222,7 +222,7 @@ Map.prototype.distanceElement = function() {
   distance.classList.add('data-panel__distance');
   row.appendChild(label)
   row.appendChild(distance)
-  distance.innerHTML = this.distance;
+  distance.innerHTML = this.distance + ' (km)';
   this.elements['distanceElement'] = distance
   return row
 }
@@ -238,7 +238,7 @@ Map.prototype.elevationElement = function() {
   row.appendChild(label);
   row.appendChild(elevation);
   console.log(this.elevation)
-  elevation.innerHTML = this.elevation || 0;
+  elevation.innerHTML = this.elevation || 0 + ' (m)';
   this.elements['elevationElement'] = elevation;
   return row
 }
@@ -273,17 +273,20 @@ Map.prototype.init = function() {
         var shifted = new google.maps.LatLng(coords.latitude - 0.0008, coords.longitude)
         
         this.roughCoords.push(location)
-        this.elements['speedElement'].innerHTML = coords.speed || 0;
+        this.elements['speedElement'].innerHTML = Math.round(coords.speed) || 0 + ' (km/h)';
 
         if (this.roughCoords.length % 10 == 0) {
           this.snapToRoads();
           this.getDistance();
           this.getElevation();
+          this.getElevation(path, this.elevator, this.map);
         }
         
         this.drawPloyline();
         this.map.panTo(shifted);
         this.marker.setPosition(location);
+        this.getElevation([location,shifted], this.elevator, this.map);
+
       }.bind(this),
 
       function(error) {
@@ -298,16 +301,6 @@ Map.prototype.init = function() {
         this.trackingButton();
         this.dataPanelElement();
         this.stopwatch = new Stopwatch(this.watch);
-        var elevator = new google.maps.ElevationService;
-        var path = [
-            {lat: 36.579, lng: -118.292},  // Mt. Whitney
-            {lat: 36.606, lng: -118.0638},  // Lone Pine
-            {lat: 36.433, lng: -117.951},  // Owens Lake
-            {lat: 36.588, lng: -116.943},  // Beatty Junction
-            {lat: 36.34, lng: -117.468},  // Panama Mint Springs
-            {lat: 36.24, lng: -116.832}];  // Badwater, Death Valley
-
-        this.getElevation(path, elevator, this.map);
       }.bind(this),
 
       function(error) {
