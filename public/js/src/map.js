@@ -6,9 +6,13 @@ function Map (element, config) {
   this.tracking = false;
   this.roughCoords = [];
   this.snappedCoords = [];
-  this.watch = '';
+  this.watch;
   this.speed = 0;
   this.distance = 0;
+  this.elevation;
+  this.stopwatch;
+  this.distanceService = new google.maps.DistanceMatrixService;
+  this.elevationService =  new google.maps.ElevationService;
   this.key = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
   this.geolocation = "geolocation" in navigator;
   this.elements = {
@@ -59,9 +63,8 @@ Map.prototype.snapToRoads = function() {
   )
 }
 
-Map.prototype.calculateDistance = function() {
-  var service = new google.maps.DistanceMatrixService;
-  service.getDistanceMatrix({
+Map.prototype.getDistance = function() {
+  distanceService.getDistanceMatrix({
     origins: [this.roughCoords[0]],
     destinations: [this.roughCoords[this.roughCoords.length-1]],
     travelMode: 'BICYCLING',
@@ -76,6 +79,10 @@ Map.prototype.calculateDistance = function() {
       this.elements.distanceElement.innerHTML = this.distance
     }
   }.bind(this));
+}
+
+Map.prototype.getElevation = function() {
+  this.elevationService
 }
 
 Map.prototype.drawPloyline = function() {
@@ -114,23 +121,23 @@ Map.prototype.trackingButton = function() {
   button.innerHTML = 'Start';
 
   button.addEventListener('click', function(event) {
-    event.preventDefault()
+    event.preventDefault();
     if (button.classList.contains('tracking-button--start')) {
       button.classList.remove('tracking-button--start')
       button.classList.add('tracking-button--stop')
       button.innerHTML = 'Stop';
       this.tracking = true;
       this.elements.body.classList.add('tracking-active')
-      new Stopwatch(this.watch).start()
-      this.init()
+      this.stopwatch.start();
+      this.init();
     } else {
       button.classList.remove('tracking-button--stop')
       button.classList.add('tracking-button--start')
       button.innerHTML = 'Start';
       this.tracking = false;
       this.elements.body.classList.remove('tracking-active')
-      new Stopwatch(this.watch).reset()
-      this.init()
+      this.stopwatch.stop();
+      this.init();
     }
   }.bind(this))
 
@@ -185,13 +192,30 @@ Map.prototype.distanceElement = function() {
   return row
 }
 
+Map.prototype.elevationElement = function() {
+  var elevation = document.createElement('div');
+  var row = document.createElement('div');
+  var label = document.createElement('span');
+  label.innerHTML = 'elevation: ';
+  label.classList.add('data-panel__label');
+  row.classList.add('data-panel__row');
+  elevation.classList.add('data-panel__elevation');
+  row.appendChild(label);
+  row.appendChild(elevation);
+  elevation.innerHTML = this.elevation;
+  this.elements['elevationElement'] = elevation;
+  return row
+}
+
+
 Map.prototype.dataPanelElement = function() {
   var panel = document.createElement('div');
   panel.classList.add('data-panel');
+  panel.style.height = window.innerHeight - 225 + 'px';
   panel.appendChild(this.stopwatchElement());
   panel.appendChild(this.speedElement());
   panel.appendChild(this.distanceElement());
-  // panel.appendChild(this.elevationChangeElement());
+  panel.appendChild(this.elevationElement());
   this.insertMapElement(panel, 'BOTTOM_RIGHT');
 }
 
@@ -206,13 +230,14 @@ Map.prototype.init = function() {
         this.elements['speedElement'].innerHTML = coords.speed || 0;
 
         if (this.roughCoords.length % 10 == 0) {
-          this.snapToRoads()
-          this.calculateDistance()
+          this.snapToRoads();
+          this.getDistance();
+          this.getElevation();
         }
         
-        this.drawPloyline()
+        this.drawPloyline();
         this.map.panTo(shifted);
-        this.speedElement()
+        this.marker.setPosition(location);
       }.bind(this),
 
       function(error) {
@@ -226,6 +251,7 @@ Map.prototype.init = function() {
         this.marker(coords);
         this.trackingButton();
         this.dataPanelElement();
+        this.stopwatch = new Stopwatch(this.watch);
       }.bind(this),
 
       function(error) {

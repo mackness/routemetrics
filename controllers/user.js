@@ -137,7 +137,7 @@ exports.postUpdateProfile = function(req, res, next) {
 
   if (errors) {
     req.flash('errors', errors);
-    return res.redirect('/account');
+    return res.redirect('/settings');
   }
 
   User.findById(req.user.id, function(err, user) {
@@ -153,13 +153,13 @@ exports.postUpdateProfile = function(req, res, next) {
       if (err) {
         if (err.code === 11000) {
           req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
-          return res.redirect('/account');
+          return res.redirect('/settings');
         } else {
           return next(err);
         }
       }
       req.flash('success', { msg: 'Profile information updated.' });
-      res.redirect('/account');
+      res.redirect('/settings');
     });
   });
 };
