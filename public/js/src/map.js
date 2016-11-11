@@ -84,7 +84,7 @@ Map.prototype.getDistance = function() {
 Map.prototype.getElevation = function(path, elevator, map) {
   elevator.getElevationAlongPath({
     'path': path,
-    'samples': 125
+    'samples': 100
   }, this.plotElevation.bind(this));
 }
 
@@ -237,7 +237,8 @@ Map.prototype.elevationElement = function() {
   elevation.classList.add('data-panel__elevation');
   row.appendChild(label);
   row.appendChild(elevation);
-  elevation.innerHTML = this.elevation;
+  console.log(this.elevation)
+  elevation.innerHTML = this.elevation || 0;
   this.elements['elevationElement'] = elevation;
   return row
 }

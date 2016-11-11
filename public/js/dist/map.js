@@ -29,7 +29,7 @@ function Map() {
     "OK" !== e ? alert("Error was: " + e) : (this.distance = t.rows[0].elements[0].distance.text, this.elements.distanceElement.innerHTML = this.distance);
   }.bind(this));
 }, Map.prototype.getElevation = function (t, e) {
-  e.getElevationAlongPath({ path: t, samples: 125 }, this.plotElevation.bind(this));
+  e.getElevationAlongPath({ path: t, samples: 100 }, this.plotElevation.bind(this));
 }, Map.prototype.plotElevation = function (t, e) {
   var n = this.elements.graphElement;if ("OK" !== e) return n.innerHTML = "Cannot show elevation: request failed because " + e, void 0;console.log(google.visualization);var a = new google.visualization.ColumnChart(n),
       i = new google.visualization.DataTable();i.addColumn("string", "Sample"), i.addColumn("number", "Elevation");for (var o = 0; o < t.length; o++) {
@@ -62,7 +62,7 @@ function Map() {
 }, Map.prototype.elevationElement = function () {
   var t = document.createElement("div"),
       e = document.createElement("div"),
-      n = document.createElement("span");return n.innerHTML = "elevation: ", n.classList.add("data-panel__label"), e.classList.add("data-panel__row"), t.classList.add("data-panel__elevation"), e.appendChild(n), e.appendChild(t), t.innerHTML = this.elevation, this.elements.elevationElement = t, e;
+      n = document.createElement("span");return n.innerHTML = "elevation: ", n.classList.add("data-panel__label"), e.classList.add("data-panel__row"), t.classList.add("data-panel__elevation"), e.appendChild(n), e.appendChild(t), console.log(this.elevation), t.innerHTML = this.elevation || 0, this.elements.elevationElement = t, e;
 }, Map.prototype.graphElement = function () {
   var t = document.createElement("div"),
       e = document.createElement("div");return e.classList.add("data-panel__row"), t.classList.add("data-panel__graph"), e.appendChild(t), this.elements.graphElement = t, e;
