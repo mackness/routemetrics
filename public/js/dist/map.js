@@ -67,7 +67,7 @@ function Map() {
   var t = document.createElement("div"),
       e = document.createElement("div");return e.classList.add("data-panel__row"), t.classList.add("data-panel__graph"), e.appendChild(t), this.elements.graphElement = t, e;
 }, Map.prototype.dataPanelElement = function () {
-  var t = document.createElement("div");t.classList.add("data-panel"), t.style.height = window.innerHeight - 225 + "px", t.appendChild(this.stopwatchElement()), t.appendChild(this.speedElement()), t.appendChild(this.distanceElement()), t.appendChild(this.elevationElement()), t.appendChild(this.graphElement()), this.insertMapElement(t, "BOTTOM_RIGHT");
+  var t = document.createElement("div");t.classList.add("data-panel"), t.style.height = window.innerHeight - 150 + "px", t.appendChild(this.stopwatchElement()), t.appendChild(this.speedElement()), t.appendChild(this.distanceElement()), t.appendChild(this.elevationElement()), t.appendChild(this.graphElement()), this.insertMapElement(t, "BOTTOM_RIGHT");
 }, Map.prototype.init = function () {
   this.tracking ? this.watchPosition(function (t) {
     var e = new google.maps.LatLng(t.latitude, t.longitude),

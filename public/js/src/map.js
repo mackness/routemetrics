@@ -249,7 +249,7 @@ Map.prototype.graphElement = function() {
 Map.prototype.dataPanelElement = function() {
   var panel = document.createElement('div');
   panel.classList.add('data-panel');
-  panel.style.height = window.innerHeight - 225 + 'px';
+  panel.style.height = window.innerHeight - 150 + 'px';
   panel.appendChild(this.stopwatchElement());
   panel.appendChild(this.speedElement());
   panel.appendChild(this.distanceElement());
