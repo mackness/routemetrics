@@ -1,7 +1,7 @@
 "use strict";
 
 function Map() {
-  this.mapReady = !1, this.tracking = !1, this.roughCoords = [], this.snappedCoords = [], this.watch, this.speed = 0, this.distance = 0, this.elevation, this.stopwatch, this.distanceService = new google.maps.DistanceMatrixService(), this.elevationService = new google.maps.ElevationService(), this.key = "AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg", this.geolocation = "geolocation" in navigator, this.elements = { mapContainer: document.querySelector("#map"), body: document.body }, this.init();
+  google.charts.load("current", { packages: ["corechart"] }), this.mapReady = !1, this.tracking = !1, this.roughCoords = [], this.snappedCoords = [], this.watch, this.speed = 0, this.distance = 0, this.distanceService = new google.maps.DistanceMatrixService(), this.elevationService = new google.maps.ElevationService(), this.key = "AIzaSyDLIr5g6ySB20U-oc8-NmrfYTZhc70bMwY", this.geolocation = "geolocation" in navigator, this.elements = { mapContainer: document.querySelector("#map"), body: document.body }, this.init();
 }Map.prototype.getCurrentLocation = function (t, e) {
   this.geolocation ? navigator.geolocation.getCurrentPosition(function (e) {
     t(e.coords);
@@ -28,8 +28,13 @@ function Map() {
   distanceService.getDistanceMatrix({ origins: [this.roughCoords[0]], destinations: [this.roughCoords[this.roughCoords.length - 1]], travelMode: "BICYCLING", unitSystem: google.maps.UnitSystem.IMPERIAL, avoidHighways: !1, avoidTolls: !1 }, function (t, e) {
     "OK" !== e ? alert("Error was: " + e) : (this.distance = t.rows[0].elements[0].distance.text, this.elements.distanceElement.innerHTML = this.distance);
   }.bind(this));
-}, Map.prototype.getElevation = function () {
-  this.elevationService;
+}, Map.prototype.getElevation = function (t, e) {
+  e.getElevationAlongPath({ path: t, samples: 125 }, this.plotElevation.bind(this));
+}, Map.prototype.plotElevation = function (t, e) {
+  var n = this.elements.graphElement;if ("OK" !== e) return n.innerHTML = "Cannot show elevation: request failed because " + e, void 0;console.log(google.visualization);var a = new google.visualization.ColumnChart(n),
+      i = new google.visualization.DataTable();i.addColumn("string", "Sample"), i.addColumn("number", "Elevation");for (var o = 0; o < t.length; o++) {
+    i.addRow(["", t[o].elevation]);
+  }a.draw(i, { height: 200, legend: "none", titleY: "Elevation (m)" });
 }, Map.prototype.drawPloyline = function () {
   var t = new google.maps.Polyline({ path: this.roughCoords, strokeColor: "green", strokeWeight: 3 });t.setMap(this.map);
 }, Map.prototype.initMap = function (t, e) {
@@ -58,8 +63,11 @@ function Map() {
   var t = document.createElement("div"),
       e = document.createElement("div"),
       n = document.createElement("span");return n.innerHTML = "elevation: ", n.classList.add("data-panel__label"), e.classList.add("data-panel__row"), t.classList.add("data-panel__elevation"), e.appendChild(n), e.appendChild(t), t.innerHTML = this.elevation, this.elements.elevationElement = t, e;
+}, Map.prototype.graphElement = function () {
+  var t = document.createElement("div"),
+      e = document.createElement("div");return e.classList.add("data-panel__row"), t.classList.add("data-panel__graph"), e.appendChild(t), this.elements.graphElement = t, e;
 }, Map.prototype.dataPanelElement = function () {
-  var t = document.createElement("div");t.classList.add("data-panel"), t.style.height = window.innerHeight - 225 + "px", t.appendChild(this.stopwatchElement()), t.appendChild(this.speedElement()), t.appendChild(this.distanceElement()), t.appendChild(this.elevationElement()), this.insertMapElement(t, "BOTTOM_RIGHT");
+  var t = document.createElement("div");t.classList.add("data-panel"), t.style.height = window.innerHeight - 225 + "px", t.appendChild(this.stopwatchElement()), t.appendChild(this.speedElement()), t.appendChild(this.distanceElement()), t.appendChild(this.elevationElement()), t.appendChild(this.graphElement()), this.insertMapElement(t, "BOTTOM_RIGHT");
 }, Map.prototype.init = function () {
   this.tracking ? this.watchPosition(function (t) {
     var e = new google.maps.LatLng(t.latitude, t.longitude),
@@ -67,7 +75,8 @@ function Map() {
   }.bind(this), function (t) {
     console.log("error", t);
   }) : this.getCurrentLocation(function (t) {
-    this.initMap(this.elements.mapContainer, t), this.marker(t), this.trackingButton(), this.dataPanelElement(), this.stopwatch = new Stopwatch(this.watch);
+    this.initMap(this.elements.mapContainer, t), this.marker(t), this.trackingButton(), this.dataPanelElement(), this.stopwatch = new Stopwatch(this.watch);var e = new google.maps.ElevationService(),
+        n = [{ lat: 36.579, lng: -118.292 }, { lat: 36.606, lng: -118.0638 }, { lat: 36.433, lng: -117.951 }, { lat: 36.588, lng: -116.943 }, { lat: 36.34, lng: -117.468 }, { lat: 36.24, lng: -116.832 }];this.getElevation(n, e, this.map);
   }.bind(this), function (t) {
     console.log("error", t);
   });

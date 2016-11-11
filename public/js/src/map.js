@@ -2,6 +2,8 @@
 
 function Map (element, config) {
 
+  google.charts.load('current', {packages: ['corechart']});
+
   this.mapReady = false;
   this.tracking = false;
   this.roughCoords = [];
@@ -9,11 +11,9 @@ function Map (element, config) {
   this.watch;
   this.speed = 0;
   this.distance = 0;
-  this.elevation;
-  this.stopwatch;
   this.distanceService = new google.maps.DistanceMatrixService;
   this.elevationService =  new google.maps.ElevationService;
-  this.key = 'AIzaSyAOraoCS2YWp6ogkhbS8DvY88y-7H6zAdg';
+  this.key = 'AIzaSyDLIr5g6ySB20U-oc8-NmrfYTZhc70bMwY';
   this.geolocation = "geolocation" in navigator;
   this.elements = {
     "mapContainer" : document.querySelector('#map'),
@@ -76,13 +76,48 @@ Map.prototype.getDistance = function() {
       alert('Error was: ' + status);
     } else {
       this.distance = response.rows[0].elements[0].distance.text;
-      this.elements.distanceElement.innerHTML = this.distance
+      this.elements.distanceElement.innerHTML = this.distance;
     }
   }.bind(this));
 }
 
-Map.prototype.getElevation = function() {
-  this.elevationService
+Map.prototype.getElevation = function(path, elevator, map) {
+  elevator.getElevationAlongPath({
+    'path': path,
+    'samples': 125
+  }, this.plotElevation.bind(this));
+}
+
+Map.prototype.plotElevation = function(elevations, status) {
+  var chartDiv = this.elements.graphElement
+  if (status !== 'OK') {
+    // Show the error code inside the chartDiv.
+    chartDiv.innerHTML = 'Cannot show elevation: request failed because ' +
+        status;
+    return;
+  }
+
+  console.log(google.visualization)
+  // Create a new chart in the elevation_chart DIV.
+  var chart = new google.visualization.ColumnChart(chartDiv);
+
+  // Extract the data from which to populate the chart.
+  // Because the samples are equidistant, the 'Sample'
+  // column here does double duty as distance along the
+  // X axis.
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Sample');
+  data.addColumn('number', 'Elevation');
+  for (var i = 0; i < elevations.length; i++) {
+    data.addRow(['', elevations[i].elevation]);
+  }
+
+  // Draw the chart using the data within its DIV.
+  chart.draw(data, {
+    height: 200,
+    legend: 'none',
+    titleY: 'Elevation (m)'
+  });
 }
 
 Map.prototype.drawPloyline = function() {
@@ -207,6 +242,15 @@ Map.prototype.elevationElement = function() {
   return row
 }
 
+Map.prototype.graphElement = function() {
+  var graph = document.createElement('div');
+  var row = document.createElement('div');
+  row.classList.add('data-panel__row');
+  graph.classList.add('data-panel__graph');
+  row.appendChild(graph);
+  this.elements['graphElement'] = graph;
+  return row
+}
 
 Map.prototype.dataPanelElement = function() {
   var panel = document.createElement('div');
@@ -216,6 +260,7 @@ Map.prototype.dataPanelElement = function() {
   panel.appendChild(this.speedElement());
   panel.appendChild(this.distanceElement());
   panel.appendChild(this.elevationElement());
+  panel.appendChild(this.graphElement());
   this.insertMapElement(panel, 'BOTTOM_RIGHT');
 }
 
@@ -252,6 +297,16 @@ Map.prototype.init = function() {
         this.trackingButton();
         this.dataPanelElement();
         this.stopwatch = new Stopwatch(this.watch);
+        var elevator = new google.maps.ElevationService;
+        var path = [
+            {lat: 36.579, lng: -118.292},  // Mt. Whitney
+            {lat: 36.606, lng: -118.0638},  // Lone Pine
+            {lat: 36.433, lng: -117.951},  // Owens Lake
+            {lat: 36.588, lng: -116.943},  // Beatty Junction
+            {lat: 36.34, lng: -117.468},  // Panama Mint Springs
+            {lat: 36.24, lng: -116.832}];  // Badwater, Death Valley
+
+        this.getElevation(path, elevator, this.map);
       }.bind(this),
 
       function(error) {
