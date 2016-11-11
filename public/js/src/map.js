@@ -2,8 +2,6 @@
 
 function Map (element, config) {
 
-  google.charts.load('current', {packages: ['corechart']});
-
   this.mapReady = false;
   this.tracking = false;
   this.roughCoords = [];
@@ -52,19 +50,20 @@ Map.prototype.formatPath = function(coords) {
 }
 
 Map.prototype.snapToRoads = function() {
+  console.log(this.formatPath(this.roughCoords))
   Ajax(
     'https://roads.googleapis.com/v1/snapToRoads?path=' + this.formatPath(this.roughCoords) + '&key=' + this.key,
     function(response) {
       this.snappedCoords = response.snappedPoints
     }.bind(this),
     function(err) {
-      console.log(err)
+      console.log('snap to roads error', err)
     }
   )
 }
 
 Map.prototype.getDistance = function() {
-  distanceService.getDistanceMatrix({
+  this.distanceService.getDistanceMatrix({
     origins: [this.roughCoords[0]],
     destinations: [this.roughCoords[this.roughCoords.length-1]],
     travelMode: 'BICYCLING',
@@ -75,6 +74,7 @@ Map.prototype.getDistance = function() {
     if (status !== 'OK') {
       alert('Error was: ' + status);
     } else {
+      //todo make sure distace object exists in the response
       this.distance = response.rows[0].elements[0].distance.text;
       this.elements.distanceElement.innerHTML = this.distance;
     }
@@ -89,15 +89,15 @@ Map.prototype.getElevation = function(path, elevator, map) {
 }
 
 Map.prototype.plotElevation = function(elevations, status) {
-  var chartDiv = this.elements.graphElement
+
+  this.elements.elevationElement.innerHTML = Math.round(elevations[elevations.length-1].elevation) + ' (m)'
   
   if (status !== 'OK') {
-    chartDiv.innerHTML = 'Cannot show elevation: request failed because ' +
-        status;
+    this.elements.graphElement.innerHTML = 'Cannot show elevation: request failed because ' + status;
     return;
   }
 
-  var chart = new google.visualization.ColumnChart(chartDiv);
+  var chart = new google.visualization.ColumnChart(this.elements.graphElement);
   var data = new google.visualization.DataTable();
   
   data.addColumn('string', 'Sample');
@@ -209,7 +209,6 @@ Map.prototype.distanceElement = function() {
   var row = document.createElement('div');
   var label = document.createElement('span');
   label.innerHTML = 'distance: ';
-  console.log('dist', this.distance)
   label.classList.add('data-panel__label');
   row.classList.add('data-panel__row');
   distance.classList.add('data-panel__distance');
@@ -230,7 +229,6 @@ Map.prototype.elevationElement = function() {
   elevation.classList.add('data-panel__elevation');
   row.appendChild(label);
   row.appendChild(elevation);
-  console.log(this.elevation)
   elevation.innerHTML = this.elevation || 0 + ' (m)';
   this.elements['elevationElement'] = elevation;
   return row
@@ -259,8 +257,11 @@ Map.prototype.dataPanelElement = function() {
 }
 
 Map.prototype.init = function() {
+  
+  google.charts.load('current', {packages: ['corechart']});
+  
   if (this.tracking) {
-    this.watchPosition(
+    this.watchPosition (
       function(coords) {
         var location = new google.maps.LatLng(coords.latitude, coords.longitude)
         var shifted = new google.maps.LatLng(coords.latitude - 0.0008, coords.longitude)
@@ -271,8 +272,7 @@ Map.prototype.init = function() {
         if (this.roughCoords.length % 10 == 0) {
           this.snapToRoads();
           this.getDistance();
-          this.getElevation();
-          this.getElevation(this.roughCoords, this.elevator, this.map);
+          this.getElevation(this.roughCoords, this.elevator, this.map); 
         }
         
         this.drawPloyline();
@@ -287,7 +287,7 @@ Map.prototype.init = function() {
       }
     )
   } else {
-    this.getCurrentLocation(
+    this.getCurrentLocation (
       function (coords) {
         this.initMap(this.elements.mapContainer, coords);
         this.marker(coords);
