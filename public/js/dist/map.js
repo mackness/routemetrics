@@ -31,7 +31,7 @@ function Map() {
 }, Map.prototype.getElevation = function (t) {
   this.elevationService.getElevationAlongPath({ path: t, samples: 100 }, this.plotElevation.bind(this));
 }, Map.prototype.plotElevation = function (t, e) {
-  var n = this.elements.graphElement;if ("OK" !== e) return n.innerHTML = "Cannot show elevation: request failed because " + e, void 0;console.log(google.visualization);var a = new google.visualization.ColumnChart(n),
+  var n = this.elements.graphElement;if ("OK" !== e) return n.innerHTML = "Cannot show elevation: request failed because " + e, void 0;var a = new google.visualization.ColumnChart(n),
       i = new google.visualization.DataTable();i.addColumn("string", "Sample"), i.addColumn("number", "Elevation");for (var o = 0; o < t.length; o++) {
     i.addRow(["", t[o].elevation]);
   }a.draw(i, { height: 200, legend: "none", titleY: "Elevation (m)" });
@@ -71,7 +71,7 @@ function Map() {
 }, Map.prototype.init = function () {
   this.tracking ? this.watchPosition(function (t) {
     var e = new google.maps.LatLng(t.latitude, t.longitude),
-        n = new google.maps.LatLng(t.latitude - 8e-4, t.longitude);this.roughCoords.push(e), this.elements.speedElement.innerHTML = Math.round(t.speed) || "0 (km/h)", this.roughCoords.length % 10 == 0 && (this.snapToRoads(), this.getDistance(), this.getElevation(), this.getElevation(path, this.elevator, this.map)), this.drawPloyline(), this.map.panTo(n), this.marker.setPosition(e), this.getElevation([e, n], this.elevator, this.map);
+        n = new google.maps.LatLng(t.latitude - 8e-4, t.longitude);this.roughCoords.push(e), this.elements.speedElement.innerHTML = Math.round(t.speed) || "0 (km/h)", this.roughCoords.length % 10 == 0 && (this.snapToRoads(), this.getDistance(), this.getElevation(), this.getElevation(this.roughCoords, this.elevator, this.map)), this.drawPloyline(), this.map.panTo(n), this.marker.setPosition(e), this.getElevation([e, n], this.elevator, this.map);
   }.bind(this), function (t) {
     console.log("error", t);
   }) : this.getCurrentLocation(function (t) {
