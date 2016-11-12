@@ -84,7 +84,7 @@ Map.prototype.getDistance = function() {
 Map.prototype.getElevation = function(path, elevator, map) {
   this.elevationService.getElevationAlongPath({
     'path': path,
-    'samples': 100
+    'samples': 50
   }, this.plotElevation.bind(this));
 }
 
@@ -267,12 +267,12 @@ Map.prototype.init = function() {
         var shifted = new google.maps.LatLng(coords.latitude - 0.0008, coords.longitude)
         
         this.roughCoords.push(location)
-        this.elements['speedElement'].innerHTML = Math.round(coords.speed) || 0 + ' (km/h)';
+        this.elements['speedElement'].innerHTML = Math.round(coords.speed) + ' (km/h)' || 0 + ' (km/h)';
 
         if (this.roughCoords.length % 10 == 0) {
           this.snapToRoads();
           this.getDistance();
-          this.getElevation(this.roughCoords, this.elevator, this.map); 
+          this.getElevation(this.roughCoords, this.elevator, this.map);
         }
         
         this.drawPloyline();

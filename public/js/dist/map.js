@@ -29,7 +29,7 @@ function Map() {
     "OK" !== e ? alert("Error was: " + e) : (this.distance = t.rows[0].elements[0].distance.text, this.elements.distanceElement.innerHTML = this.distance);
   }.bind(this));
 }, Map.prototype.getElevation = function (t) {
-  this.elevationService.getElevationAlongPath({ path: t, samples: 100 }, this.plotElevation.bind(this));
+  this.elevationService.getElevationAlongPath({ path: t, samples: 50 }, this.plotElevation.bind(this));
 }, Map.prototype.plotElevation = function (t, e) {
   if (this.elements.elevationElement.innerHTML = Math.round(t[t.length - 1].elevation) + " (m)", "OK" !== e) return this.elements.graphElement.innerHTML = "Cannot show elevation: request failed because " + e, void 0;var n = new google.visualization.ColumnChart(this.elements.graphElement),
       a = new google.visualization.DataTable();a.addColumn("string", "Sample"), a.addColumn("number", "Elevation");for (var i = 0; i < t.length; i++) {
@@ -71,7 +71,7 @@ function Map() {
 }, Map.prototype.init = function () {
   google.charts.load("current", { packages: ["corechart"] }), this.tracking ? this.watchPosition(function (t) {
     var e = new google.maps.LatLng(t.latitude, t.longitude),
-        n = new google.maps.LatLng(t.latitude - 8e-4, t.longitude);this.roughCoords.push(e), this.elements.speedElement.innerHTML = Math.round(t.speed) || "0 (km/h)", this.roughCoords.length % 10 == 0 && (this.snapToRoads(), this.getDistance(), this.getElevation(this.roughCoords, this.elevator, this.map)), this.drawPloyline(), this.map.panTo(n), this.marker.setPosition(e), this.getElevation([e, n], this.elevator, this.map);
+        n = new google.maps.LatLng(t.latitude - 8e-4, t.longitude);this.roughCoords.push(e), this.elements.speedElement.innerHTML = Math.round(t.speed) + " (km/h)" || "0 (km/h)", this.roughCoords.length % 10 == 0 && (this.snapToRoads(), this.getDistance(), this.getElevation(this.roughCoords, this.elevator, this.map)), this.drawPloyline(), this.map.panTo(n), this.marker.setPosition(e), this.getElevation([e, n], this.elevator, this.map);
   }.bind(this), function (t) {
     console.log("error", t);
   }) : this.getCurrentLocation(function (t) {
