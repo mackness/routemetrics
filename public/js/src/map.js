@@ -63,10 +63,14 @@ Map.prototype.snapToRoads = function() {
 }
 
 Map.prototype.saveTrip = function() {
+  var coords = this.snappedCoords
+  var distance = this.distance
   $.post(
     '/trip',
     {
-      test: 'this is test'
+      date: Date(),
+      route: coords,
+      distance: distance
     },
     function(response, status) {
       if (status != 'success') {

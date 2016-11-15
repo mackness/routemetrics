@@ -3,6 +3,11 @@ extends ../layout
 block content
   .page-header
     h3 Ride History
+  each trip in user.trips
+    div.trip
+      p= trip.date
+      p= trip.route
+      p= trip.distance
 
   .page-header
     h3 Profile Information

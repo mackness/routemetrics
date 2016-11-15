@@ -30,6 +30,7 @@ dotenv.load({ path: '.env' });
  * Controllers (route handlers).
  */
 var homeController = require('./controllers/home');
+var tripController = require('./controllers/trip');
 var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
@@ -119,7 +120,8 @@ app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
 app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
-app.post('/trip', userController.postTrip);
+app.post('/trip', tripController.postTrip);
+app.get('/trips', tripController.index);
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/settings', passportConfig.isAuthenticated, userController.getAccount);

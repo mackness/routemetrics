@@ -23,7 +23,8 @@ function Map() {
     "success" != e ? console.log("Error was: " + e) : this.snappedCoords = t.snappedPoints;
   }.bind(this));
 }, Map.prototype.saveTrip = function () {
-  $.post("/trip", { test: "this is test" }, function (t, e) {
+  var t = this.snappedCoords,
+      e = this.distance;$.post("/trip", { date: Date(), route: t, distance: e }, function (t, e) {
     "success" != e ? console.log("Error was: " + e) : (console.log(t), this.elements.saveButton.innerHTML = "Save");
   }.bind(this));
 }, Map.prototype.getDistance = function () {

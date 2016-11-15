@@ -115,27 +115,6 @@ exports.postSignup = function(req, res, next) {
   });
 };
 
-/**
- * POST /trip
- * Save a users trip.
- */
-exports.postTrip = function(req, res, next) {
-  User.findById(req.user.id, function(err, user) {
-    if (err) {
-      return next(err);
-    }
-
-    console.log(user)
-
-    // user.save(function(err) {
-    //   if (err) {
-    //     return next(err);
-    //   }
-    //   req.flash('success', { msg: 'Profile information updated.' });
-    //   res.redirect('/settings');
-    // });
-  });
-};
 
 /**
  * GET /account
