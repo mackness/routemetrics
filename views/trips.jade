@@ -1,1 +1,10 @@
-extends ../layout
+extends ./layout
+
+block content
+	.page-header
+		h3 Trip History
+	each trip in user.trips
+		div.trip
+			p= trip.date
+			p= trip.route
+			p= trip.distance
