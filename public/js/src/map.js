@@ -50,15 +50,32 @@ Map.prototype.formatPath = function(coords) {
 }
 
 Map.prototype.snapToRoads = function() {
-  console.log(this.formatPath(this.roughCoords))
-  Ajax(
+  $.get(
     'https://roads.googleapis.com/v1/snapToRoads?path=' + this.formatPath(this.roughCoords) + '&key=' + this.key,
-    function(response) {
-      this.snappedCoords = response.snappedPoints
-    }.bind(this),
-    function(err) {
-      console.log('snap to roads error', err)
-    }
+    function(response, status)  {
+      if (status != 'success') {
+        console.log('Error was: ' + status);
+      } else {
+        this.snappedCoords = response.snappedPoints
+      }
+    }.bind(this)
+  );
+}
+
+Map.prototype.saveTrip = function() {
+  $.post(
+    '/trip',
+    {
+      test: 'this is test'
+    },
+    function(response, status) {
+      if (status != 'success') {
+        console.log('Error was: ' + status);
+      } else {
+        console.log(response)
+        this.elements.saveButton.innerHTML = 'Save'
+      }
+    }.bind(this)
   )
 }
 
@@ -72,7 +89,7 @@ Map.prototype.getDistance = function() {
     avoidTolls: false
   }, function(response, status) {
     if (status !== 'OK') {
-      alert('Error was: ' + status);
+      console.log('Error was: ' + status);
     } else {
       //todo make sure distace object exists in the response
       this.distance = response.rows[0].elements[0].distance.text;
@@ -138,7 +155,7 @@ Map.prototype.marker = function(coords) {
   });
 }
 
-Map.prototype.insertMapElement = function(element, position) {
+Map.prototype.insertMapElement = function(element, position) { 
   this.map.controls[google.maps.ControlPosition[position]].push(element);
 }
 
@@ -159,6 +176,11 @@ Map.prototype.trackingButton = function() {
       this.stopwatch.start();
       this.init();
     } else {
+
+      if (this.elements.saveButton) {
+        this.elements.saveButton.remove()
+      }
+
       button.classList.remove('tracking-button--stop')
       button.classList.add('tracking-button--start')
       button.innerHTML = 'Start';
@@ -168,7 +190,22 @@ Map.prototype.trackingButton = function() {
       this.init();
     }
   }.bind(this))
+  this.elements['trackingButton'] = button
+  this.insertMapElement(button, 'BOTTOM_CENTER')
+}
 
+Map.prototype.saveButton = function() {
+  var button = document.createElement('button');
+  button.classList.add('tracking-button');
+  button.classList.add('tracking-button--save');
+  button.innerHTML = 'Save';
+
+  button.addEventListener('click', function(event) {
+    button.innerHTML = 'Saving...'
+    this.saveTrip()
+  }.bind(this))
+
+  this.elements['saveButton'] = button
   this.insertMapElement(button, 'BOTTOM_CENTER')
 }
 
@@ -200,7 +237,7 @@ Map.prototype.speedElement = function() {
   row.appendChild(label)
   row.appendChild(speed)
   this.speed = speed;
-  this.elements['speedElement'] = speed  
+  this.elements['speedElement'] = speed
   return row
 }
 
@@ -253,6 +290,7 @@ Map.prototype.dataPanelElement = function() {
   panel.appendChild(this.distanceElement());
   panel.appendChild(this.elevationElement());
   panel.appendChild(this.graphElement());
+  this.elements['dataPanelElement'] = panel;
   this.insertMapElement(panel, 'BOTTOM_RIGHT');
 }
 
@@ -261,6 +299,9 @@ Map.prototype.init = function() {
   google.charts.load('current', {packages: ['corechart']});
   
   if (this.tracking) {
+    
+    this.saveButton();
+    
     this.watchPosition (
       function(coords) {
         var location = new google.maps.LatLng(coords.latitude, coords.longitude)

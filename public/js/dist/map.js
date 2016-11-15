@@ -19,14 +19,16 @@ function Map() {
     return [t.lat(), t.lng()].join(",");
   }).join("|");
 }, Map.prototype.snapToRoads = function () {
-  console.log(this.formatPath(this.roughCoords)), Ajax("https://roads.googleapis.com/v1/snapToRoads?path=" + this.formatPath(this.roughCoords) + "&key=" + this.key, function (t) {
-    this.snappedCoords = t.snappedPoints;
-  }.bind(this), function (t) {
-    console.log("snap to roads error", t);
-  });
+  $.get("https://roads.googleapis.com/v1/snapToRoads?path=" + this.formatPath(this.roughCoords) + "&key=" + this.key, function (t, e) {
+    "success" != e ? console.log("Error was: " + e) : this.snappedCoords = t.snappedPoints;
+  }.bind(this));
+}, Map.prototype.saveTrip = function () {
+  $.post("/trip", { test: "this is test" }, function (t, e) {
+    "success" != e ? console.log("Error was: " + e) : (console.log(t), this.elements.saveButton.innerHTML = "Save");
+  }.bind(this));
 }, Map.prototype.getDistance = function () {
   this.distanceService.getDistanceMatrix({ origins: [this.roughCoords[0]], destinations: [this.roughCoords[this.roughCoords.length - 1]], travelMode: "BICYCLING", unitSystem: google.maps.UnitSystem.METRIC, avoidHighways: !1, avoidTolls: !1 }, function (t, e) {
-    "OK" !== e ? alert("Error was: " + e) : (this.distance = t.rows[0].elements[0].distance.text, this.elements.distanceElement.innerHTML = this.distance);
+    "OK" !== e ? console.log("Error was: " + e) : (this.distance = t.rows[0].elements[0].distance.text, this.elements.distanceElement.innerHTML = this.distance);
   }.bind(this));
 }, Map.prototype.getElevation = function (t) {
   this.elevationService.getElevationAlongPath({ path: t, samples: 50 }, this.plotElevation.bind(this));
@@ -45,8 +47,12 @@ function Map() {
   this.map.controls[google.maps.ControlPosition[e]].push(t);
 }, Map.prototype.trackingButton = function () {
   var t = document.createElement("button");t.classList.add("tracking-button"), t.classList.add("tracking-button--start"), t.innerHTML = "Start", t.addEventListener("click", function (e) {
-    e.preventDefault(), t.classList.contains("tracking-button--start") ? (t.classList.remove("tracking-button--start"), t.classList.add("tracking-button--stop"), t.innerHTML = "Stop", this.tracking = !0, this.elements.body.classList.add("tracking-active"), this.stopwatch.start(), this.init()) : (t.classList.remove("tracking-button--stop"), t.classList.add("tracking-button--start"), t.innerHTML = "Start", this.tracking = !1, this.elements.body.classList.remove("tracking-active"), this.stopwatch.stop(), this.init());
-  }.bind(this)), this.insertMapElement(t, "BOTTOM_CENTER");
+    e.preventDefault(), t.classList.contains("tracking-button--start") ? (t.classList.remove("tracking-button--start"), t.classList.add("tracking-button--stop"), t.innerHTML = "Stop", this.tracking = !0, this.elements.body.classList.add("tracking-active"), this.stopwatch.start(), this.init()) : (this.elements.saveButton && this.elements.saveButton.remove(), t.classList.remove("tracking-button--stop"), t.classList.add("tracking-button--start"), t.innerHTML = "Start", this.tracking = !1, this.elements.body.classList.remove("tracking-active"), this.stopwatch.stop(), this.init());
+  }.bind(this)), this.elements.trackingButton = t, this.insertMapElement(t, "BOTTOM_CENTER");
+}, Map.prototype.saveButton = function () {
+  var t = document.createElement("button");t.classList.add("tracking-button"), t.classList.add("tracking-button--save"), t.innerHTML = "Save", t.addEventListener("click", function () {
+    t.innerHTML = "Saving...", this.saveTrip();
+  }.bind(this)), this.elements.saveButton = t, this.insertMapElement(t, "BOTTOM_CENTER");
 }, Map.prototype.stopwatchElement = function () {
   var t = document.createElement("div"),
       e = document.createElement("div"),
@@ -67,14 +73,14 @@ function Map() {
   var t = document.createElement("div"),
       e = document.createElement("div");return e.classList.add("data-panel__row"), t.classList.add("data-panel__graph"), e.appendChild(t), this.elements.graphElement = t, e;
 }, Map.prototype.dataPanelElement = function () {
-  var t = document.createElement("div");t.classList.add("data-panel"), t.style.height = window.innerHeight - 150 + "px", t.appendChild(this.stopwatchElement()), t.appendChild(this.speedElement()), t.appendChild(this.distanceElement()), t.appendChild(this.elevationElement()), t.appendChild(this.graphElement()), this.insertMapElement(t, "BOTTOM_RIGHT");
+  var t = document.createElement("div");t.classList.add("data-panel"), t.style.height = window.innerHeight - 150 + "px", t.appendChild(this.stopwatchElement()), t.appendChild(this.speedElement()), t.appendChild(this.distanceElement()), t.appendChild(this.elevationElement()), t.appendChild(this.graphElement()), this.elements.dataPanelElement = t, this.insertMapElement(t, "BOTTOM_RIGHT");
 }, Map.prototype.init = function () {
-  google.charts.load("current", { packages: ["corechart"] }), this.tracking ? this.watchPosition(function (t) {
+  google.charts.load("current", { packages: ["corechart"] }), this.tracking ? (this.saveButton(), this.watchPosition(function (t) {
     var e = new google.maps.LatLng(t.latitude, t.longitude),
         n = new google.maps.LatLng(t.latitude - 8e-4, t.longitude);this.roughCoords.push(e), this.elements.speedElement.innerHTML = Math.round(t.speed) + " (km/h)" || "0 (km/h)", this.roughCoords.length % 10 == 0 && (this.snapToRoads(), this.getDistance(), this.getElevation(this.roughCoords, this.elevator, this.map)), this.drawPloyline(), this.map.panTo(n), this.marker.setPosition(e), this.getElevation([e, n], this.elevator, this.map);
   }.bind(this), function (t) {
     console.log("error", t);
-  }) : this.getCurrentLocation(function (t) {
+  })) : this.getCurrentLocation(function (t) {
     this.initMap(this.elements.mapContainer, t), this.marker(t), this.trackingButton(), this.dataPanelElement(), this.stopwatch = new Stopwatch(this.watch);
   }.bind(this), function (t) {
     console.log("error", t);

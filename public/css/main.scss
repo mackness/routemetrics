@@ -58,7 +58,12 @@ textarea {
 // -------------------------
 
 .alert {
-  margin-top: 20px;
+    position: absolute;
+    z-index: 10000;
+    top: 8px;
+    left: 56px;
+    right: 85px;
+    padding: 5px;
 }
 
 // Thumbnails
@@ -149,7 +154,7 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
   box-shadow: 0 2px 6px rgba(0,0,0,.3);
   z-index: 100;
   width: 100px;
-  margin-bottom: 40px;
+  margin: 0 5px 40px 5px;
   text-transform: uppercase;
   z-index: 1 !important;
 }
@@ -160,6 +165,10 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
 
 .tracking-button--stop {
   background-color: #c0392b; 
+}
+
+.tracking-button--save {
+  background-color: #3498db;
 }
 
 .navbar-collapse {
