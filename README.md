@@ -4,9 +4,9 @@ Routemetrics - performance monitoring for cyclists
 ### Usage
 
 ```
-git clone git@bitbucket.org:macksol/react-flux-boilerplate.git
+git clone https://github.com/mackness/Routemetrics.git
 npm install
-node app.js
+npm run dev
 ```
 
 ### Linting / Tests (TODO)
