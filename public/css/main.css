@@ -11326,6 +11326,9 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
   margin-bottom: 6px; }
 
 .btn-link {
-  padding: 10px 0 0 0; }
+  padding: 10px 0 0 0;
+  clear: both;
+  width: 100%;
+  text-align: left; }
 
 /*# sourceMappingURL=main.css.map */
