@@ -6053,20 +6053,20 @@ tbody.collapse.in {
   @media (min-width: 768px) {
     .navbar-collapse {
       width: auto;
-      border-top: 0;
-      box-shadow: none; }
+      /*border-top: 0;*/
+      /*box-shadow: none;*/ }
       .navbar-collapse.collapse {
-        display: block !important;
-        height: auto !important;
-        padding-bottom: 0;
-        overflow: visible !important; }
+        /*      display: block !important;
+      height: auto !important;
+      padding-bottom: 0; // Override default setting
+      overflow: visible !important;*/ }
       .navbar-collapse.in {
-        overflow-y: visible; }
+        /*overflow-y: visible;*/ }
       .navbar-fixed-top .navbar-collapse,
       .navbar-static-top .navbar-collapse,
       .navbar-fixed-bottom .navbar-collapse {
-        padding-left: 0;
-        padding-right: 0; } }
+        /*      padding-left: 0;
+      padding-right: 0;*/ } }
 
 .navbar-fixed-top .navbar-collapse,
 .navbar-fixed-bottom .navbar-collapse {
@@ -11330,5 +11330,8 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
   clear: both;
   width: 100%;
   text-align: left; }
+
+.form-horizontal .control-label {
+  padding-top: 0; }
 
 /*# sourceMappingURL=main.css.map */

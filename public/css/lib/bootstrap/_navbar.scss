@@ -62,18 +62,18 @@
 
   @media (min-width: $grid-float-breakpoint) {
     width: auto;
-    border-top: 0;
-    box-shadow: none;
+    /*border-top: 0;*/
+    /*box-shadow: none;*/
 
     &.collapse {
-      display: block !important;
+/*      display: block !important;
       height: auto !important;
       padding-bottom: 0; // Override default setting
-      overflow: visible !important;
+      overflow: visible !important;*/
     }
 
     &.in {
-      overflow-y: visible;
+      /*overflow-y: visible;*/
     }
 
     // Undo the collapse side padding for navbars with containers to ensure
@@ -81,8 +81,8 @@
     .navbar-fixed-top &,
     .navbar-static-top &,
     .navbar-fixed-bottom & {
-      padding-left: 0;
-      padding-right: 0;
+/*      padding-left: 0;
+      padding-right: 0;*/
     }
   }
 }
