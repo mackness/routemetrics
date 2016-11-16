@@ -1,7 +1,7 @@
 "use strict";
 
 function Map() {
-  this.mapReady = !1, this.tracking = !1, this.roughCoords = [], this.snappedCoords = [], this.watch, this.speed = 0, this.distance = 0, this.distanceService = new google.maps.DistanceMatrixService(), this.elevationService = new google.maps.ElevationService(), this.key = "AIzaSyDLIr5g6ySB20U-oc8-NmrfYTZhc70bMwY", this.geolocation = "geolocation" in navigator, this.elements = { mapContainer: document.querySelector("#map"), body: document.body }, this.init();
+  this.mapReady = !1, this.tracking = !1, this.roughCoords = [], this.snappedCoords = [], this.watch, this.speed = 0, this.distance = 0, this.distanceService = new google.maps.DistanceMatrixService(), this.elevationService = new google.maps.ElevationService(), this.key = "AIzaSyDLIr5g6ySB20U-oc8-NmrfYTZhc70bMwY", this.geolocation = "geolocation" in navigator, this.elements = { mapContainer: document.querySelector("#map"), layoutContainer: document.querySelector(".layout-container"), body: document.body }, this.init();
 }Map.prototype.getCurrentLocation = function (t, e) {
   this.geolocation ? navigator.geolocation.getCurrentPosition(function (e) {
     t(e.coords);
@@ -74,7 +74,7 @@ function Map() {
   var t = document.createElement("div"),
       e = document.createElement("div");return e.classList.add("data-panel__row"), t.classList.add("data-panel__graph"), e.appendChild(t), this.elements.graphElement = t, e;
 }, Map.prototype.dataPanelElement = function () {
-  var t = document.createElement("div");t.classList.add("data-panel"), t.style.height = window.innerHeight - 150 + "px", t.appendChild(this.stopwatchElement()), t.appendChild(this.speedElement()), t.appendChild(this.distanceElement()), t.appendChild(this.elevationElement()), t.appendChild(this.graphElement()), this.elements.dataPanelElement = t, this.insertMapElement(t, "BOTTOM_RIGHT");
+  var t = document.createElement("div");t.classList.add("data-panel"), t.style.top = "150px", t.style.height = this.elements.layoutContainer.offsetHeight - 150 + "px", t.appendChild(this.stopwatchElement()), t.appendChild(this.speedElement()), t.appendChild(this.distanceElement()), t.appendChild(this.elevationElement()), t.appendChild(this.graphElement()), this.elements.dataPanelElement = t, this.insertMapElement(t, "BOTTOM_RIGHT");
 }, Map.prototype.init = function () {
   google.charts.load("current", { packages: ["corechart"] }), this.tracking ? (this.saveButton(), this.watchPosition(function (t) {
     var e = new google.maps.LatLng(t.latitude, t.longitude),

@@ -8,6 +8,8 @@
     max-width: 374px;
 	display: block;
 	font-size: 16px;
+	opacity: 0;
+	bottom: auto !important;
 	z-index: 0 !important;
 	right: auto !important;
 	position: fixed !important;
@@ -16,9 +18,11 @@
 	transform: translate(0,100%);
 
 	.tracking-active & {
+		opacity: 1;
 		transform: translate(0,0);
 	}
 }
+
 
 .data-panel__label {
     float: left;

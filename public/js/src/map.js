@@ -15,6 +15,7 @@ function Map (element, config) {
   this.geolocation = "geolocation" in navigator;
   this.elements = {
     "mapContainer" : document.querySelector('#map'),
+    "layoutContainer" : document.querySelector('.layout-container'),
     "body" : document.body
   }
 
@@ -288,7 +289,8 @@ Map.prototype.graphElement = function() {
 Map.prototype.dataPanelElement = function() {
   var panel = document.createElement('div');
   panel.classList.add('data-panel');
-  panel.style.height = window.innerHeight - 150 + 'px';
+  panel.style.top = 150 + 'px';
+  panel.style.height = this.elements.layoutContainer.offsetHeight - 150 + 'px';  
   panel.appendChild(this.stopwatchElement());
   panel.appendChild(this.speedElement());
   panel.appendChild(this.distanceElement());
