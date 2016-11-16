@@ -16,13 +16,35 @@ html {
   box-sizing: border-box;
 }
 
+body {
+  background-color: #282828;
+}
+
 *, *:before, *:after {
   box-sizing: inherit;
 }
 
-body {
-  padding-top: 60px;
-  margin-bottom: 75px;
+.layout-container {
+    max-width: 375px;
+    height: 667px;
+    position: relative;
+    overflow-y: auto;
+    margin: 0 auto;
+    background: #fff;
+}
+
+.navbar-toggle {
+  display: block !important;
+}
+
+.navbar-default {
+    overflow: hidden;
+    position: relative;
+    z-index: 999;
+}
+
+h3 {
+  margin-top: 0;
 }
 
 footer {
@@ -36,6 +58,12 @@ footer {
   p, ul {
     margin-bottom: 0;
   }
+}
+
+.page-header {
+    padding-bottom: 9px;
+    margin: 10px 0 20px;
+    border-bottom: 1px solid #eeeeee;
 }
 
 // Input Fields
@@ -56,7 +84,7 @@ textarea {
 
 // Alerts
 // -------------------------
-
+/*
 .alert {
     position: absolute;
     z-index: 10000;
@@ -64,7 +92,7 @@ textarea {
     left: 56px;
     right: 85px;
     padding: 5px;
-}
+}*/
 
 // Thumbnails
 // -------------------------

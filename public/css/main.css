@@ -6034,16 +6034,15 @@ tbody.collapse.in {
     .navbar {
       border-radius: 4px; } }
 
-.navbar-header:before, .navbar-header:after {
-  content: " ";
-  display: table; }
-
-.navbar-header:after {
-  clear: both; }
-
-@media (min-width: 768px) {
-  .navbar-header {
-    float: left; } }
+.navbar-header {
+  /*  @media (min-width: $grid-float-breakpoint) {
+    float: left;
+  }*/ }
+  .navbar-header:before, .navbar-header:after {
+    content: " ";
+    display: table; }
+  .navbar-header:after {
+    clear: both; }
 
 .navbar-collapse {
   overflow-x: visible;
@@ -11161,10 +11160,11 @@ button.close {
   width: 100%;
   padding: 10px;
   height: 410px;
+  max-width: 374px;
   display: block;
   font-size: 16px;
   z-index: 0 !important;
-  right: 0 !important;
+  right: auto !important;
   position: fixed !important;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
@@ -11187,12 +11187,30 @@ html {
   min-height: 100%;
   box-sizing: border-box; }
 
+body {
+  background-color: #282828; }
+
 *, *:before, *:after {
   box-sizing: inherit; }
 
-body {
-  padding-top: 60px;
-  margin-bottom: 75px; }
+.layout-container {
+  max-width: 375px;
+  height: 667px;
+  position: relative;
+  overflow-y: auto;
+  margin: 0 auto;
+  background: #fff; }
+
+.navbar-toggle {
+  display: block !important; }
+
+.navbar-default {
+  overflow: hidden;
+  position: relative;
+  z-index: 999; }
+
+h3 {
+  margin-top: 0; }
 
 footer {
   position: absolute;
@@ -11204,6 +11222,11 @@ footer {
   footer p, footer ul {
     margin-bottom: 0; }
 
+.page-header {
+  padding-bottom: 9px;
+  margin: 10px 0 20px;
+  border-bottom: 1px solid #eeeeee; }
+
 textarea {
   resize: vertical; }
 
@@ -11212,14 +11235,15 @@ textarea {
   height: 30px;
   margin: -15px 15px -15px; }
 
+/*
 .alert {
-  position: absolute;
-  z-index: 10000;
-  top: 8px;
-  left: 56px;
-  right: 85px;
-  padding: 5px; }
-
+    position: absolute;
+    z-index: 10000;
+    top: 8px;
+    left: 56px;
+    right: 85px;
+    padding: 5px;
+}*/
 .thumbnail {
   padding: 0;
   border-radius: 0;
