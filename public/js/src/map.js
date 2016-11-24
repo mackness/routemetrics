@@ -119,7 +119,7 @@ Map.prototype.plotElevation = function(elevations, status) {
     return;
   }
 
-  var chart = new google.visualization.ColumnChart(this.elements.graphElement);
+  var chart = new google.visualization.LineChart(this.elements.graphElement);
   var data = new google.visualization.DataTable();
   
   data.addColumn('string', 'Sample');

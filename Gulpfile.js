@@ -24,7 +24,7 @@ var gulp      = require('gulp'),
  *
  */
 gulp.task('scripts', function () {
-  return gulp.src(['./public/js/src/map.js'])
+  return gulp.src(['./public/js/src/*.js'])
     .pipe(uglify())
     .pipe(gulpImports())
     .pipe(babel({presets: ['es2015']}))

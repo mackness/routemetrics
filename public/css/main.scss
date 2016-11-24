@@ -5,6 +5,7 @@
 @import "lib/font-awesome/font-awesome";
 @import "themes/default/default";
 @import "modules/data-panel";
+@import "modules/trips";
 
 
 // Scaffolding
@@ -223,6 +224,9 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
   padding-top: 0;
 }
 
+.navbar-toggle {
+  margin-right: 0;
+}
 
 
 

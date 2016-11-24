@@ -34,7 +34,7 @@ function Map() {
 }, Map.prototype.getElevation = function (t) {
   this.elevationService.getElevationAlongPath({ path: t, samples: 50 }, this.plotElevation.bind(this));
 }, Map.prototype.plotElevation = function (t, e) {
-  if (this.elements.elevationElement.innerHTML = Math.round(t[t.length - 1].elevation) + " (m)", "OK" !== e) return this.elements.graphElement.innerHTML = "Cannot show elevation: request failed because " + e, void 0;var n = new google.visualization.ColumnChart(this.elements.graphElement),
+  if (this.elements.elevationElement.innerHTML = Math.round(t[t.length - 1].elevation) + " (m)", "OK" !== e) return this.elements.graphElement.innerHTML = "Cannot show elevation: request failed because " + e, void 0;var n = new google.visualization.LineChart(this.elements.graphElement),
       a = new google.visualization.DataTable();a.addColumn("string", "Sample"), a.addColumn("number", "Elevation");for (var i = 0; i < t.length; i++) {
     a.addRow(["", t[i].elevation]);
   }n.draw(a, { height: 200, legend: "none", titleY: "Elevation (m)" });

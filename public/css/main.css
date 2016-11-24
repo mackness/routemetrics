@@ -11175,6 +11175,10 @@ button.close {
   width: 100%;
   margin-bottom: 10px; }
 
+.trip__label {
+  float: left;
+  margin-right: 10px; }
+
 html {
   position: relative;
   min-height: 100%;
@@ -11336,5 +11340,8 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
 
 .form-horizontal .control-label {
   padding-top: 0; }
+
+.navbar-toggle {
+  margin-right: 0; }
 
 /*# sourceMappingURL=main.css.map */

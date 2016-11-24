@@ -39,3 +39,16 @@ exports.postTrip = function(req, res, next) {
     });
   });
 };
+
+/**
+ * DELETE /trip
+ * Save a users trip.
+ */
+exports.deleteTrip = function(req, res, next) { 
+  console.log('delete trip', req.user.id);
+};
+
+
+
+
+

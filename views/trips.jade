@@ -3,8 +3,22 @@ extends ./layout
 block content
 	.page-header
 		h3 Trip History
-	each trip in user.trips
+	each trip, index in user.trips
 		div.trip
-			p= trip.date
-			p= trip.route
+			b.trip__label Date:
+			p= trip.date.substr(0,15)
+			b.trip__label Distance:
 			p= trip.distance
+			b.trip__label Elevation Chart:
+			p.chart__outlet= trip.route[index]
+
+			button.btn.btn-danger
+				i.fa.fa-trash
+				Remove | Delete Trip
+
+if user
+	block scripts
+		script(src='https://www.gstatic.com/charts/loader.js')
+		script(src='/js/dist/trips.js')
+		script.
+			new Trips(document.querySelectorAll('.chart__outlet'))
