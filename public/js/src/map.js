@@ -67,7 +67,7 @@ Map.prototype.saveTrip = function() {
   var coords = this.snappedCoords
   var distance = this.distance
   $.post(
-    '/trip',
+    '/trips',
     {
       date: Date(),
       route: coords,

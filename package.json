@@ -83,6 +83,7 @@
     "gulp-imports": "0.0.2",
     "gulp-jshint": "^1.6.3",
     "gulp-karma": "0.0.4",
+    "gulp-notify": "^2.2.0",
     "gulp-uglify": "^0.3.1",
     "gulp-util": "^2.2.19",
     "jquery": "^2.2.3",

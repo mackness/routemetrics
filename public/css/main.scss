@@ -26,9 +26,9 @@ body {
 }
 
 .layout-container {
-    max-width: 375px;
-    height: 667px;
-    position: relative;
+    width: 100%;
+    height: 100%;
+    position: absolute;
     overflow-y: auto;
     margin: 0 auto;
     background: #fff;
@@ -202,10 +202,6 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
 
 .navbar-collapse {
   width: 100%;
-}
-
-.navbar-header {
-  max-width: 375px;
 }
 
 .form-horizontal .form-group label {

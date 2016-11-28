@@ -44,8 +44,21 @@ exports.postTrip = function(req, res, next) {
  * DELETE /trip
  * Save a users trip.
  */
-exports.deleteTrip = function(req, res, next) { 
-  console.log('delete trip', req.user.id);
+exports.deleteTrip = function(req, res, next) {
+  User.findById(req.user.id, function(err, user) {
+    if (err) {
+      return next(err);
+    }
+
+    user.trips.splice(req.params.tripid, 1)
+
+    user.save(function(err) {
+      if (err) {
+        return next(err);
+      }
+      res.send('success');
+    });
+  });
 };
 
 

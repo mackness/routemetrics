@@ -1,6 +1,1 @@
-"use strict";
-function Trips(t) {
-  this.outlets = t, this.init();
-}Trips.prototype.initCharts = function () {}, Trips.prototype.init = function () {
-  this.initCharts();
-};
+"use strict";function Trips(t){this.outlets=t,this.elements={button:document.querySelectorAll(".btn-danger")},this.init()}Trips.prototype.initCharts=function(){},Trips.prototype.init=function(){this.initCharts(),$(this.elements.button).on("click",function(t){t.preventDefault(),$(this).text("Deleting"),$.ajax({url:"/trips/"+$(this).data("index"),type:"DELETE",success:function(t){console.log(t),$(this).closest(".trip").fadeOut()}.bind(this)})})};

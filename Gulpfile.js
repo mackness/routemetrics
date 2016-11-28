@@ -8,6 +8,7 @@ var gulp      = require('gulp'),
   jshint      = require('gulp-jshint'),
   karma       = require('gulp-karma'),
   babel       = require('gulp-babel'),
+  notify      = require('gulp-notify'),
   pkg         = require('./package.json'),
   banner      = ['/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
@@ -25,10 +26,14 @@ var gulp      = require('gulp'),
  */
 gulp.task('scripts', function () {
   return gulp.src(['./public/js/src/*.js'])
-    .pipe(uglify())
-    .pipe(gulpImports())
+    .pipe(jshint('.jshintrc'))
+    .pipe(jshint.reporter('default'))
     .pipe(babel({presets: ['es2015']}))
-    .pipe(gulp.dest('./public/js/dist/'));
+    //.pipe(concat('main.js'))
+    //.pipe(rename({ suffix: '.min' }))
+    .pipe(uglify())
+    .pipe(gulp.dest('./public/js/dist/'))
+    .pipe(notify({ message: 'Scripts task complete' }));
 });
 
 /**
