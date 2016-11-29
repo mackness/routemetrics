@@ -11344,6 +11344,11 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
   padding-top: 0; }
 
 .navbar-toggle {
-  margin-right: 0; }
+  margin-right: 13px; }
+
+.chart__outlet {
+  margin-top: 30px; }
+  .chart__outlet > div {
+    margin-bottom: -40px; }
 
 /*# sourceMappingURL=main.css.map */

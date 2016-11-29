@@ -221,10 +221,16 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4_hdpi.png"] {
 }
 
 .navbar-toggle {
-  margin-right: 0;
+  margin-right: 13px;
 }
 
+.chart__outlet {
+    margin-top: 30px;
 
+    > div {
+      margin-bottom: -40px;
+    }
+}
 
 
 

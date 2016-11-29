@@ -1,6 +1,6 @@
 extends layout
-
 block content
+
 	.page-header
 		h3 Trip History
 	each trip, index in user.trips
@@ -10,7 +10,7 @@ block content
 			b.trip__label Distance:
 			p= trip.distance
 			b.trip__label Elevation Chart:
-			p.chart__outlet= trip.route[index]
+			p.chart__outlet(data-route= trip.route)
 
 			button.btn.btn-danger.btn__trips(data-index=index)
 				i.fa.fa-trash
@@ -19,6 +19,7 @@ block content
 
 if user
 	block scripts
+		script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization&key=AIzaSyDLIr5g6ySB20U-oc8-NmrfYTZhc70bMwY')
 		script(src='https://www.gstatic.com/charts/loader.js')
 		script(src='/js/dist/trips.js')
 		script.

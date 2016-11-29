@@ -78,7 +78,8 @@ Map.prototype.saveTrip = function() {
         console.log('Error was: ' + status);
       } else {
         console.log(response)
-        this.elements.saveButton.innerHTML = 'Save'
+        this.elements.saveButton.innerHTML = 'Saved';
+        window.location.reload();
       }
     }.bind(this)
   )
@@ -337,7 +338,9 @@ Map.prototype.init = function() {
     this.getCurrentLocation (
       function (coords) {
         this.initMap(this.elements.mapContainer, coords);
-        this.marker(coords);
+        if (this.marker) {
+          this.marker(coords);
+        }
         this.trackingButton();
         this.dataPanelElement();
         this.stopwatch = new Stopwatch(this.watch);
