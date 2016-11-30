@@ -5,29 +5,28 @@ function Trips(outlets) {
 	this.path = [];
 	this.elevationService =  new google.maps.ElevationService;
 	this.elements = {
-		button: document.querySelectorAll('.btn-danger')
+		button: document.querySelectorAll('.btn-danger'),
+		outlets: document.querySelectorAll('.chart__outlet')
 	};
 
 	this.init();
 }
 
-Trips.prototype.getElevationPoints = function() {
+Trips.prototype.getElevationPoints = function(trip) {
   this.elevationService.getElevationAlongPath({
     'path': this.path,
     'samples': 50
-  }, this.plotElevation.bind(this));
+  }, this.plotElevation.bind(this, trip));
 }
 
-Trips.prototype.plotElevation = function(elevations, status) {
-	console.log(elevations, status)
-	console.log(this.outlet)
+Trips.prototype.plotElevation = function(chartEl, elevations, status) {
 
   if (status !== 'OK') {
-    this.outlet.innerHTML = 'Cannot show elevation: request failed because ' + status;
+		chartEl.innerHTML = 'Cannot show elevation: request failed because ' + status;
     return;
   }
  
-	var chart = new google.visualization.LineChart(this.outlet);
+	var chart = new google.visualization.LineChart(chartEl);
 	var data = new google.visualization.DataTable();
 
 	data.addColumn('string', 'Sample');
@@ -52,8 +51,8 @@ Trips.prototype.constructPath = function() {
 					lng: +coords.location.longitude,
 				})
 			}.bind(this))
-			this.outlet = trip
-			this.getElevationPoints()
+      console.log(trip)
+			this.getElevationPoints(trip)
 		}
 	}.bind(this))
 }
