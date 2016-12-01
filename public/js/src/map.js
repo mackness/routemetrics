@@ -182,18 +182,17 @@ Map.prototype.trackingButton = function() {
       this.stopwatch.start();
       this.init();
     } else {
+      location.reload()
+      // if (this.elements.saveButton) {
+      //   this.elements.saveButton.remove()
+      // }
 
-      if (this.elements.saveButton) {
-        this.elements.saveButton.remove()
-      }
-
-      button.classList.remove('tracking-button--stop')
-      button.classList.add('tracking-button--start')
-      button.innerHTML = 'Start';
-      this.tracking = false;
-      this.elements.body.classList.remove('tracking-active')
-      this.stopwatch.stop();
-      this.init();
+      // button.classList.remove('tracking-button--stop')
+      // button.classList.add('tracking-button--start')
+      // button.innerHTML = 'Start';
+      // this.tracking = false;
+      // this.stopwatch.pause();
+      // this.init();
     }
   }.bind(this))
   this.elements['trackingButton'] = button
