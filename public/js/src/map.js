@@ -182,16 +182,18 @@ Map.prototype.trackingButton = function() {
       this.stopwatch.start();
       this.init();
     } else {
-      location.reload()
+      // location.reload()
+      this.stopwatch.stop();
+
       // if (this.elements.saveButton) {
       //   this.elements.saveButton.remove()
       // }
 
-      // button.classList.remove('tracking-button--stop')
-      // button.classList.add('tracking-button--start')
-      // button.innerHTML = 'Start';
+      button.classList.remove('tracking-button--stop')
+      button.classList.add('tracking-button--start')
+      button.innerHTML = 'Start';
       // this.tracking = false;
-      // this.stopwatch.pause();
+      // 
       // this.init();
     }
   }.bind(this))
@@ -211,7 +213,9 @@ Map.prototype.saveButton = function() {
   }.bind(this))
 
   this.elements['saveButton'] = button
-  this.insertMapElement(button, 'BOTTOM_CENTER')
+  if (document.querySelectorAll('.tracking-button--save').length == 0) {
+    this.insertMapElement(button, 'BOTTOM_CENTER')
+  }
 }
 
 Map.prototype.stopwatchElement = function() {

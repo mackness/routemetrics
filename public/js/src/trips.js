@@ -2,7 +2,6 @@
 
 function Trips(outlets) {
 	this.outlets = outlets;
-	this.path = [];
 	this.elevationService =  new google.maps.ElevationService;
 	this.elements = {
 		button: document.querySelectorAll('.btn-danger'),
@@ -12,9 +11,9 @@ function Trips(outlets) {
 	this.init();
 }
 
-Trips.prototype.getElevationPoints = function(trip) {
+Trips.prototype.getElevationPoints = function(trip, path) {
   this.elevationService.getElevationAlongPath({
-    'path': this.path,
+    'path': path,
     'samples': 50
   }, this.plotElevation.bind(this, trip));
 }
@@ -45,14 +44,13 @@ Trips.prototype.plotElevation = function(chartEl, elevations, status) {
 Trips.prototype.constructPath = function() {
 	Array.prototype.forEach.call(this.outlets, function(trip, i) {
 		if (trip.dataset.route != 0) {
-			JSON.parse(trip.dataset.route).forEach(function(coords, i) {
-				this.path.push({
-					lat: +coords.location.latitude,
-					lng: +coords.location.longitude,
-				})
-			}.bind(this))
-      console.log(trip)
-			this.getElevationPoints(trip)
+      var path = JSON.parse(trip.dataset.route).map(function(coords, i) {
+        return {
+          lat: +coords.location.latitude,
+          lng: +coords.location.longitude,
+        }
+      })
+			this.getElevationPoints(trip, path)
 		}
 	}.bind(this))
 }
