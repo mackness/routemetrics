@@ -1,9 +1,9 @@
-var _ = require('lodash');
-var async = require('async');
-var crypto = require('crypto');
-var nodemailer = require('nodemailer');
-var passport = require('passport');
-var User = require('../models/User');
+const _ = require('lodash');
+const async = require('async');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const passport = require('passport');
+const User = require('../models/User');
 
 /**
  * GET /
@@ -26,6 +26,7 @@ exports.postTrip = function(req, res, next) {
     }
 
     user.trips.push({
+      _id: user.trips.length + 1,
       date: req.body.date,
       route: req.body.route || 0,
       distance: req.body.distance || 0
@@ -50,7 +51,12 @@ exports.deleteTrip = function(req, res, next) {
       return next(err);
     }
 
-    user.trips.splice(req.params.tripid, 1)
+    user.trips.forEach(function(trip, i) {
+      if (req.params.tripid == trip._id) {
+        user.trips.splice(i, 1);
+        console.log(user.trips.splice(i, 1))
+      }
+    })
 
     user.save(function(err) {
       if (err) {

@@ -1,9 +1,9 @@
-var _ = require('lodash');
-var async = require('async');
-var crypto = require('crypto');
-var nodemailer = require('nodemailer');
-var passport = require('passport');
-var User = require('../models/User');
+const _ = require('lodash');
+const async = require('async');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const passport = require('passport');
+const User = require('../models/User');
 
 /**
  * GET /login
@@ -27,7 +27,7 @@ exports.postLogin = function(req, res, next) {
   req.assert('password', 'Password cannot be blank').notEmpty();
   req.sanitize('email').normalizeEmail();
 
-  var errors = req.validationErrors();
+  const errors = req.validationErrors();
 
   if (errors) {
     req.flash('errors', errors);

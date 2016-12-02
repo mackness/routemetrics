@@ -16,7 +16,7 @@ block content
 				p.chart__outlet(data-route= trip.route)
 			else
 				p.no-data Path too short
-			button.btn.btn-danger.btn__trips(data-index=index)
+			button.btn.btn-danger.btn__trips(data-index=trip._id)
 				i.fa.fa-trash
 				span | Delete Trip
 			hr

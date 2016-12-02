@@ -1,23 +1,23 @@
 /**
  * Module dependencies.
  */
-var express = require('express');
-var compress = require('compression');
-var session = require('express-session');
-var bodyParser = require('body-parser');
-var logger = require('morgan');
-var errorHandler = require('errorhandler');
-var lusca = require('lusca');
-var dotenv = require('dotenv');
-var MongoStore = require('connect-mongo/es5')(session);
-var flash = require('express-flash');
-var path = require('path');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var expressValidator = require('express-validator');
-var sass = require('node-sass-middleware');
-var multer = require('multer');
-var upload = multer({ dest: path.join(__dirname, 'uploads') });
+const express = require('express');
+const compress = require('compression');
+const session = require('express-session');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
+const errorHandler = require('errorhandler');
+const lusca = require('lusca');
+const dotenv = require('dotenv');
+const MongoStore = require('connect-mongo/es5')(session);
+const flash = require('express-flash');
+const path = require('path');
+const mongoose = require('mongoose');
+const passport = require('passport');
+const expressValidator = require('express-validator');
+const sass = require('node-sass-middleware');
+const multer = require('multer');
+const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -29,21 +29,21 @@ dotenv.load({ path: '.env' });
 /**
  * Controllers (route handlers).
  */
-var homeController = require('./controllers/home');
-var tripController = require('./controllers/trip');
-var userController = require('./controllers/user');
-var apiController = require('./controllers/api');
-var contactController = require('./controllers/contact');
+const homeController = require('./controllers/home');
+const tripController = require('./controllers/trip');
+const userController = require('./controllers/user');
+const apiController = require('./controllers/api');
+const contactController = require('./controllers/contact');
 
 /**
  * API keys and Passport configuration.
  */
-var passportConfig = require('./config/passport');
+const passportConfig = require('./config/passport');
 
 /**
  * Create Express server.
  */
-var app = express();
+const app = express();
 
 /**
  * Connect to MongoDB.
